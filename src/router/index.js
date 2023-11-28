@@ -1,29 +1,45 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '../views/Home.vue';
+import SearchResults from '../views/SearchResults.vue';
+import MovieDetails from '../views/MovieDetails.vue';
+import WatchMovie from '../views/WatchMovie.vue';
+import Categories from '../views/Categories.vue'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'Home',
+    component: Home,
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+    path: '/Categories',
+    name: 'Categories',
+    component: Categories,
+  },
+  {
+    path: '/search',
+    name: 'SearchResults',
+    component: SearchResults,
+  },
+  {
+    path: '/movie/:id',
+    name: 'MovieDetails',
+    component: MovieDetails,
+  },
+  {
+    path: '/watch-movie/:id',
+    name: 'WatchMovie',
+    component: WatchMovie
+  },
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

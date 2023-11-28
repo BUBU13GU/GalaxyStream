@@ -1,0 +1,249 @@
+/* Global CSS */
+
+/* Color Palette Definitions */
+:root {
+  /* Primary Purple Shades */
+  --primary-color-light: #a366ff; /* Light Purple */
+  --primary-color: #8000ff; /* Medium Purple */
+  --primary-color-dark: #4d0099; /* Dark Purple */
+
+  /* Secondary Colors (Blacks and Grays) */
+  --secondary-color-light: #333333; /* Light Gray */
+  --secondary-color: #000000; /* Black */
+
+  /* Accent Colors (Grays and Black) */
+  --accent-color-dark: #222222; /* Darker Gray */
+  --accent-color: #444444; /* Medium Gray */
+  --accent-color-light: #666666; /* Lighter Gray */
+
+  /* Base Application Styles */
+  --background-color: var(--primary-color-light);
+  --text-color: var(--primary-color); /* Light Gray for text */
+}
+
+/* Global Link Styles */
+a {
+  color: var(--primary-color); /* Medium Purple */
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+a:hover {
+  transform: scale(1.05);
+}
+
+/* Application Root Styles */
+#app {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-image: radial-gradient(circle at 84% 82%, rgba(217, 217, 217,0.03) 0%, rgba(217, 217, 217,0.03) 21%,transparent 21%, transparent 100%),radial-gradient(circle at 75% 56%, rgba(3, 3, 3,0.03) 0%, rgba(3, 3, 3,0.03) 30%,transparent 30%, transparent 100%),radial-gradient(circle at 74% 53%, rgba(153, 153, 153,0.03) 0%, rgba(153, 153, 153,0.03) 95%,transparent 95%, transparent 100%),radial-gradient(circle at 86% 43%, rgba(209, 209, 209,0.03) 0%, rgba(209, 209, 209,0.03) 83%,transparent 83%, transparent 100%),radial-gradient(circle at 64% 88%, rgba(192, 192, 192,0.03) 0%, rgba(192, 192, 192,0.03) 2%,transparent 2%, transparent 100%),radial-gradient(circle at 73% 77%, rgba(205, 205, 205,0.03) 0%, rgba(205, 205, 205,0.03) 18%,transparent 18%, transparent 100%),radial-gradient(circle at 57% 51%, rgba(161, 161, 161,0.03) 0%, rgba(161, 161, 161,0.03) 64%,transparent 64%, transparent 100%),radial-gradient(circle at 40% 84%, rgba(115, 115, 115,0.03) 0%, rgba(115, 115, 115,0.03) 14%,transparent 14%, transparent 100%),linear-gradient(90deg, var(--secondary-color), var(--secondary-color));
+  color: var(--text-color);
+  overflow-y: hidden;
+}
+
+/* Cross-Browser Scrollbar Hiding */
+html {
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* Animated Gradient Keyframes */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Text Shadow for Headings */
+h1, h2, h3 {
+  text-shadow: 2px 2px var(--accent-color-dark);
+}
+
+/* Box Shadow and Transition for Cards */
+.movie-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  max-width: 325px;
+  height: auto;
+  overflow: hidden;
+  margin-left: 6%;
+}
+
+.movie-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+/* Gradient Border for Elements */
+.element-with-gradient-border {
+  position: relative;
+}
+
+.element-with-gradient-border::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color-light));
+  z-index: -1;
+  border-radius: 5px;
+}
+
+/* Subtle Animations on Page Load */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fadeInUp {
+  animation: fadeInUp 1s ease-out;
+}
+
+/* Rotating Icons or Elements */
+.rotating {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pulsing Effect for Notifications or Buttons */
+.pulsing {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Floating Effect for Images or Cards */
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Shimmering Loading Skeletons */
+.shimmer {
+  background: linear-gradient(to right, var(--secondary-color-light) 0%, var(--primary-color-light) 50%, var(--secondary-color-light) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+/* Fade In Left/Right Animations */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fadeInLeft {
+  animation: fadeInLeft 1s ease-out;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fadeInRight {
+  animation: fadeInRight 1s ease-out;
+}
+
+/* Particle Effect */
+.particle-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.particle-background::before, .particle-background::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: var(--primary-color); /* Using defined purple color */
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: particleSpread 5s linear infinite;
+}
+
+@keyframes particleSpread {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+  }
+  100% {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+  }
+}

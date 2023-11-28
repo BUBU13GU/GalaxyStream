@@ -1,0 +1,8 @@
+{
+  "appId": "movie.stream",
+  "appName": "movie-stream",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

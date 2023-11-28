@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MOVIE STREAM</string>
+    <string name="title_activity_main">MOVIE STREAM</string>
+    <string name="package_name">movie.stream</string>
+    <string name="custom_url_scheme">movie.stream</string>
+</resources>

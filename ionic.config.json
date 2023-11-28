@@ -1,0 +1,7 @@
+{
+  "name": "movie-stream",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
