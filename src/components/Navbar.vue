@@ -16,6 +16,7 @@
 
     <!-- Navigation Drawer -->
     <v-navigation-drawer v-model="drawer" app class="drawer">
+      <img src="@/assets/logo.png" alt="Logo" class="drawer-logo" />
       <v-list dense>
         <v-list-item @click="goToHome" class="drawer-item">
           <v-list-item-icon>
@@ -91,11 +92,16 @@ export default {
 }
 
 .navbar-logo {
-  max-width: 50px;
-  max-height: 50px;
+  max-width: 69px;
+  max-height: 69px;
   border-radius: 50%;
 }
-
+.drawer-logo
+{
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 50%;
+}
 /* Navigation Drawer Styles */
 .drawer {
   color: var(--primary-color)!important; /* Light Gray for text */
