@@ -12,6 +12,18 @@
       </v-carousel-item>
     </v-carousel>
 
+     <!-- Trending Series Carousel -->
+  <h1>Trending Series</h1>
+  <v-carousel hide-delimiters >
+    <v-carousel-item v-for="(group, index) in chunkedTrendingSeries" :key="index">
+      <v-row>
+        <v-col cols="12" sm="6" md="4" v-for="series in group" :key="series.id">
+          <series-card :series="series"></series-card>
+        </v-col>
+      </v-row>
+    </v-carousel-item>
+  </v-carousel>
+
     <!-- Latest Movies Carousel -->
     <h1>Latest Movies</h1>
     <v-carousel hide-delimiters >
@@ -24,8 +36,20 @@
       </v-carousel-item>
     </v-carousel>
 
+      <!-- Latest Series Carousel -->
+  <h1>Latest Series</h1>
+  <v-carousel hide-delimiters >
+    <v-carousel-item v-for="(group, index) in chunkedLatestSeries" :key="index">
+      <v-row>
+        <v-col cols="12" sm="6" md="4" v-for="series in group" :key="series.id">
+          <series-card :series="series"></series-card>
+        </v-col>
+      </v-row>
+    </v-carousel-item>
+  </v-carousel>
+
     <!-- Highest Rated Movies Carousel -->
-    <h1>Highest Rated Movies</h1>
+    <h1>Top Rated Movies</h1>
     <v-carousel hide-delimiters >
       <v-carousel-item v-for="(group, index) in chunkedTopRatedMovies" :key="index">
         <v-row>
@@ -35,22 +59,40 @@
         </v-row>
       </v-carousel-item>
     </v-carousel>
+
+    
+  <!-- Top Rated Series Carousel -->
+  <h1>Top Rated Series</h1>
+  <v-carousel hide-delimiters >
+    <v-carousel-item v-for="(group, index) in chunkedTopRatedSeries" :key="index">
+      <v-row>
+        <v-col cols="12" sm="6" md="4" v-for="series in group" :key="series.id">
+          <series-card :series="series"></series-card>
+        </v-col>
+      </v-row>
+    </v-carousel-item>
+  </v-carousel>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import MovieCard from '../components/MovieCard.vue';
+import SeriesCard from '../components/SeriesCard.vue';
 
 export default {
   components: {
     MovieCard,
+    SeriesCard,
   },
   data() {
     return {
       trendingMovies: [],
       latestMovies: [],
       topRatedMovies: [],
+      trendingSeries: [],
+      latestSeries: [],
+      topRatedSeries: [],
       screenWidth: window.innerWidth
     };
   },
@@ -63,13 +105,25 @@ export default {
     },
     chunkedTopRatedMovies() {
       return this.chunkArray(this.topRatedMovies, this.computeChunks());
-    }
+    },
+    chunkedTrendingSeries() {
+      return this.chunkArray(this.trendingSeries, this.computeChunks());
+    },
+    chunkedLatestSeries() {
+      return this.chunkArray(this.latestSeries, this.computeChunks());
+    },
+    chunkedTopRatedSeries() {
+      return this.chunkArray(this.topRatedSeries, this.computeChunks());
+    },
   },
   created() {
     window.addEventListener('resize', this.handleResize);
     this.fetchTrendingMovies();
     this.fetchLatestMovies();
     this.fetchTopRatedMovies();
+    this.fetchTrendingSeries();
+    this.fetchLatestSeries();
+    this.fetchTopRatedSeries();
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize);
@@ -95,6 +149,18 @@ export default {
       const response = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`);
       this.topRatedMovies = response.data.results;
     },
+    async fetchTrendingSeries() {
+      const response = await axios.get(`https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.VUE_APP_TMDB_API_KEY}`);
+      this.trendingSeries = response.data.results;
+    },
+    async fetchLatestSeries() {
+      const response = await axios.get(`https://api.themoviedb.org/3/tv/on_the_air?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`);
+      this.latestSeries = response.data.results;
+    },
+    async fetchTopRatedSeries() {
+      const response = await axios.get(`https://api.themoviedb.org/3/tv/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`);
+      this.topRatedSeries = response.data.results;
+    },
     chunkArray(array, size) {
       let result = [];
       for (let i = 0; i < array.length; i += size) {
@@ -108,6 +174,12 @@ export default {
 
 <style scoped>
 .movie-card {
+  max-width: 325px; /* Adjust as needed */
+  height: auto;
+  overflow: hidden; /* Ensure the overlay fits within the card */
+  margin-left: 6%;
+}
+.series-card {
   max-width: 325px; /* Adjust as needed */
   height: auto;
   overflow: hidden; /* Ensure the overlay fits within the card */

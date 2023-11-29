@@ -44,7 +44,7 @@ export default {
   
 <style scoped>
 .movie-card {
-  max-width: 300px; /* Adjust as needed */
+  max-width: 200px; /* Adjust as needed */
   overflow: hidden; /* Ensure the overlay fits within the card */
 }
 
