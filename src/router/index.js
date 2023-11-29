@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import SearchResults from '../views/SearchResults.vue';
 import MovieDetails from '../views/MovieDetails.vue';
+import SeriesDetails from '../views/SeriesDetails.vue';
 import WatchMovie from '../views/WatchMovie.vue';
 import Categories from '../views/Categories.vue'
 
@@ -28,6 +29,11 @@ const routes = [
     path: '/movie/:id',
     name: 'MovieDetails',
     component: MovieDetails,
+  },
+  {
+    path: '/series/:id',
+    name: 'SeriesDetails',
+    component: SeriesDetails,
   },
   {
     path: '/watch-movie/:id',
