@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+import Categories from '../views/Categories.vue'
 import SearchResults from '../views/SearchResults.vue';
 import MovieDetails from '../views/MovieDetails.vue';
 import SeriesDetails from '../views/SeriesDetails.vue';
 import WatchMovie from '../views/WatchMovie.vue';
-import Categories from '../views/Categories.vue'
+import WatchSeries from '../views/WatchSeries.vue';
+
 
 Vue.use(VueRouter);
 
@@ -40,6 +42,11 @@ const routes = [
     name: 'WatchMovie',
     component: WatchMovie
   },
+  {
+    path: '/watch-series/:tmdbId/season/:season',
+    name: 'WatchSeries',
+    component: WatchSeries,
+  }
 ];
 
 const router = new VueRouter({
