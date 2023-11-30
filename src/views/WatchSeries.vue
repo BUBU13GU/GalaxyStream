@@ -51,29 +51,19 @@
           }
         },
         async fetchSeasonTorrents() {
-  if (!this.imdbId) return;
-
-  try {
-    const response = await axios.get(`https://eztvx.to/api/get-torrents?query_term=${this.imdbId}`);
-    if (response.data.data.torrents && response.data.data.torrents.length > 0) {
-      const seasonNumberStr = String(this.seasonNumber).padStart(2, '0');
-      const seasonRegex = new RegExp(`S${seasonNumberStr}E\\d{2}`, 'i');
-
-      this.torrents = response.data.data.torrents.filter(torrent =>
+    if (!this.imdbId) return;
+  
+    try {
+      const response = await axios.get(`https://eztvx.to/api/get-torrents?imdb_id=${this.imdbId}`);
+      const seasonRegex = new RegExp(`S${this.seasonNumber.padStart(2, '0')}E\\d{2}`, 'i');
+  
+      this.torrents = response.data.torrents.filter(torrent =>
         seasonRegex.test(torrent.title)
       );
-
-      // Example of creating magnet links (adapt as needed)
-      this.torrents.forEach(torrent => {
-        const encodedTitle = encodeURIComponent(torrent.title);
-        torrent.magnetLink = `magnet:?xt=urn:btih:${torrent.hash}&dn=${encodedTitle}`;
-        // Add trackers if needed
-      });
+    } catch (error) {
+      console.error('Error fetching season torrents:', error);
     }
-  } catch (error) {
-    console.error('Error fetching season torrents:', error);
-  }
-},
+  },
       },
     };
   </script>
