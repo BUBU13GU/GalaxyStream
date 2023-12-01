@@ -108,13 +108,17 @@
         }
       },
       goToWatchSeries(seasonNumber) {
-  if (!seasonNumber) return;
-  console.log('Navigating to WatchSeries with TMDb ID:', this.series.id, 'and season:', seasonNumber, 'Title:', this.series.name);
-  this.$router.push({
-    name: 'WatchSeries',
-    params: { tmdbId: this.series.id, season: seasonNumber, seriesTitle: this.series.name },
-  });
-},
+    if (!seasonNumber) return;
+    this.$router.push({
+      name: 'WatchSeries',
+      params: {
+        tmdbId: this.series.id,
+        season: seasonNumber,
+        seriesTitle: this.series.name
+      }
+    });
+  },
+
       async showTrailer() {
         try {
           const response = await axios.get(
