@@ -44,7 +44,7 @@ export default {
   },
   data() {
     return {
-      title: "MOVIE STREAM",
+      title: "GALAXY STREAM",
       drawer: false,
     };
   },

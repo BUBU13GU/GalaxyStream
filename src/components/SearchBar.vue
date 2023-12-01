@@ -2,7 +2,7 @@
   <v-form @submit.prevent="submitSearch">
     <v-text-field
       v-model="searchQuery"
-      label="Search Movies"
+      label="Search"
       single-line
       outlined
       rounded
