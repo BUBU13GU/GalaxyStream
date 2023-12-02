@@ -1,100 +1,97 @@
 <template>
   <v-container>
-    <h1>Watch {{ seriesTitle }}</h1>
-    <div v-if="episodeLoaded">
-      <iframe :src="episodeUrl" width="100%" height="700px" frameborder="0" allowfullscreen></iframe>
-    </div>
+    <h1>Watch:{{ seriesTitle }} Episode {{ currentEpisode ? currentEpisode.episode_number : '' }}: {{ currentEpisode ? currentEpisode.name : '' }}</h1>
+    
+    <iframe v-if="currentEpisode" :src="embedUrl" frameborder="0" width="100%" height="500px" allowfullscreen></iframe>
     <div v-else>Loading...</div>
-
-    <!-- Season and Episode Selection -->
-    <v-row>
-      <v-col cols="12" sm="6">
-        <v-select v-model="selectedSeason" :items="seasons" label="Select Season" @change="onSeasonChange"></v-select>
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-select v-model="selectedEpisode" :items="episodes" label="Select Episode" @change="onEpisodeChange"></v-select>
-      </v-col>
-    </v-row>
-
-    <!-- Similar Series Carousel -->
-    <h2 v-if="similarSeries.length > 0">Similar Series</h2>
+    <div v-if="episodes.length > 0">
+      <v-btn color="var(--primary-color)" rounded v-for="episode in episodes" :key="episode.id" @click="setCurrentEpisode(episode)">
+        Episode {{ episode.episode_number }}
+      </v-btn>
+    </div>
+       <!-- Similar Series Carousel -->
+       <h2 v-if="similarSeries.length > 0">Similar Series</h2>
     <v-carousel hide-delimiters v-if="similarSeries.length > 0">
-      <v-carousel-item v-for="(group, index) in chunkedSimilarSeries" :key="index">
+      <v-carousel-item
+        v-for="(group, index) in chunkedSimilarSeries"
+        :key="index">
         <v-row>
           <v-col cols="12" sm="6" md="4" v-for="series in group" :key="series.id">
-            <Series-card :series="series"></Series-card>
+            <series-card :series="series"></series-card> <!-- Use the SeriesCard component -->
           </v-col>
         </v-row>
       </v-carousel-item>
     </v-carousel>
   </v-container>
 </template>
-
 <script>
 import axios from "axios";
-import SeriesCard from '../components/SeriesCard.vue';
+import SeriesCard from '../components/SeriesCard.vue'; 
 
 export default {
   name: "WatchSeries",
   components: {
-    SeriesCard,
+    SeriesCard, 
   },
   data() {
     return {
-      seriesId: this.$route.params.id,
-      seriesTitle: this.$route.params.title,
-      episodeLoaded: false,
-      episodeUrl: "",
-      similarSeries: [],
-      screenWidth: window.innerWidth,
-      seasons: [],
+      tmdbId: this.$route.params.tmdbId,
+      seasonNumber: this.$route.params.season,
+      seriesTitle: "",
       episodes: [],
-      selectedSeason: null,
-      selectedEpisode: null,
+      currentEpisode: null,
+      similarSeries: [], 
     };
   },
   computed: {
-    chunkedSimilarSeries() {
-      const columns = this.computeColumns();
-      return this.chunkArray(this.similarSeries, columns);
-    },
+    embedUrl() {
+      if (!this.currentEpisode) return '';
+      const baseUrl = 'https://vidsrc.xyz/embed/tv';
+      return `${baseUrl}?tmdb=${this.tmdbId}&season=${this.seasonNumber}&episode=${this.currentEpisode.episode_number}`;
+    }
   },
   async created() {
-    window.addEventListener("resize", this.handleResize);
-    await this.fetchSeriesDetails();
-    await this.fetchSimilarSeries();
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize);
+    await this.fetchSeriesTitle();
+    await this.fetchSeasonEpisodes();
+    await this.fetchSimilarSeries(); 
   },
   methods: {
-    computeColumns() {
-      if (this.screenWidth > 1024) return 3;
-      else if (this.screenWidth > 600) return 2;
-      return 1;
-    },
-    async fetchSeriesDetails() {
-      try {
-        // Fetch series details including seasons from your API
-        const response = await axios.get(`[Your API Endpoint]/${this.seriesId}`);
-        this.seriesTitle = response.data.title; // Set series title
-        this.seasons = response.data.seasons; // Set seasons
-        // Optionally set initial season and episode
-      } catch (error) {
-        console.error("Error fetching series details:", error);
-      }
-    },
-    async fetchSimilarSeries() {
+    async fetchSeriesTitle() {
       try {
         const response = await axios.get(
-          `https://api.themoviedb.org/3/tv/${this.seriesId}/similar?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+          `https://api.themoviedb.org/3/tv/${this.tmdbId}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
         );
-        this.similarSeries = response.data.results;
+        this.seriesTitle = response.data.name;
       } catch (error) {
-        console.error("Error fetching similar series:", error);
+        console.error("Error fetching series title:", error);
       }
     },
-    chunkArray(array, size) {
+    async fetchSeasonEpisodes() {
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/tv/${this.tmdbId}/season/${this.seasonNumber}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+        );
+        this.episodes = response.data.episodes;
+        this.setCurrentEpisode(this.episodes[0]); // Load the first episode by default
+      } catch (error) {
+        console.error('Error fetching season episodes:', error);
+      }
+    },
+    setCurrentEpisode(episode) {
+      this.currentEpisode = episode;
+    },
+  },
+    async fetchSimilarSeries() {
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/tv/${this.tmdbId}/similar?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+      );
+      this.similarSeries = response.data.results;
+    } catch (error) {
+      console.error("Error fetching similar series:", error);
+    }
+  },
+  chunkArray(array, size) {
       let result = [];
       for (let i = 0; i < array.length; i += size) {
         result.push(array.slice(i, i + size));
@@ -104,40 +101,32 @@ export default {
     handleResize() {
       this.screenWidth = window.innerWidth;
     },
-    onSeasonChange() {
-      // Update episodes based on selected season
-      // Set selectedEpisode to null or first episode of the new season
-    },
-    onEpisodeChange() {
-      // Update the embed URL based on selected episode
-      if (this.selectedSeason && this.selectedEpisode) {
-        this.episodeUrl = `https://vidsrc.xyz/embed/tv?tmdb=${this.seriesId}&season=${this.selectedSeason}&episode=${this.selectedEpisode}`;
-        this.episodeLoaded = true;
-      }
-    },
-  },
-};
+  };
 </script>
 
 <style scoped>
-  .series-card {
+  /* Add styles for your episode buttons and video player here */
+  button {
+    margin: 5px;
+  }
+  .series-card { /* Rename .movie-card to .series-card */
     max-width: 325px;
     height: auto;
     overflow: hidden;
     margin-left: 6%;
   }
 
-  .image-container {
+  .image-container { /* Rename .image-container */
     position: relative;
   }
 
-  .series-poster {
+  .series-poster { /* Rename .movie-poster to .series-poster */
     width: 100%;
     height: auto;
     transition: filter 0.3s;
   }
 
-  .details-overlay {
+  .details-overlay { /* Rename .details-overlay */
     position: absolute;
     top: 0;
     left: 0;
@@ -155,12 +144,12 @@ export default {
     opacity: 1;
   }
 
-  .details-text {
+  .details-text { /* Rename .details-text */
     color: white;
     text-align: center;
   }
 
-  .series-card:hover .series-poster {
+  .series-card:hover .series-poster { /* Rename .movie-card:hover to .series-card:hover and .movie-poster to .series-poster */
     filter: blur(2px);
   }
 </style>

@@ -2,7 +2,7 @@
   <v-container>
     <h1>Watch {{ movieTitle }}</h1>
     <div v-if="movieLoaded">
-      <iframe :src="videoUrl" width="100%" height="700px" frameborder="0" allowfullscreen></iframe>
+      <iframe :src="videoUrl" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
     </div>
     <div v-else>Loading...</div>
 
@@ -72,7 +72,7 @@ export default {
       }
     },
     embedMovie() {
-      this.videoUrl = `https://vidsrc.xyz/embed/movie?tmdb=${this.movieId}&color=8000ff`;
+      this.videoUrl = `https://vidsrc.xyz/embed/movie?tmdb=${this.movieId}`;
       this.movieLoaded = true;
     },
     async fetchSimilarMovies() {

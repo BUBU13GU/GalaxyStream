@@ -43,9 +43,9 @@ const routes = [
     component: WatchMovie
   },
   {
-    path: '/watch-series/:id',
+    path: '/watch-series/:tmdbId/season/:season',
     name: 'WatchSeries',
-    component: WatchSeries
+    component: WatchSeries,
   }
 ];
 
