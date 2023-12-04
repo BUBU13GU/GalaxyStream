@@ -2,7 +2,13 @@
   <v-container>
     <h1>Watch {{ movieTitle }}</h1>
     <div v-if="movieLoaded">
-      <iframe :src="videoUrl" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+      <iframe
+        :src="videoUrl"
+        width="100%"
+        height="550px"
+        overflow-y="hidden"
+        frameborder="0"
+        allowfullscreen></iframe>
     </div>
     <div v-else>Loading...</div>
 
@@ -23,79 +29,81 @@
 </template>
 
 <script>
-import axios from "axios";
-import MovieCard from '../components/MovieCard.vue';
+  import axios from "axios";
+  import MovieCard from "../components/MovieCard.vue";
 
-export default {
-  name: "WatchMovie",
-  components: {
-    MovieCard,
-  },
-  data() {
-    return {
-      movieId: this.$route.params.id, // TMDb movie ID from route parameter
-      movieTitle: "",
-      movieLoaded: false,
-      videoUrl: "",
-      similarMovies: [],
-      screenWidth: window.innerWidth,
-    };
-  },
-  computed: {
-    chunkedSimilarMovies() {
-      const columns = this.computeColumns();
-      return this.chunkArray(this.similarMovies, columns);
+  export default {
+    name: "WatchMovie",
+    components: {
+      MovieCard,
     },
-  },
-  async created() {
-    window.addEventListener("resize", this.handleResize);
-    await this.fetchMovieDetails();
-    this.embedMovie();
-    await this.fetchSimilarMovies();
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize);
-  },
-  methods: {
-    computeColumns() {
-      if (this.screenWidth > 1024) return 3;
-      else if (this.screenWidth > 600) return 2;
-      return 1;
+    data() {
+      return {
+        movieId: this.$route.params.id, // TMDb movie ID from route parameter
+        movieTitle: "",
+        movieLoaded: false,
+        videoUrl: "",
+        similarMovies: [],
+        screenWidth: window.innerWidth,
+      };
     },
-    async fetchMovieDetails() {
-      try {
-        const response = await axios.get(`https://api.themoviedb.org/3/movie/${this.movieId}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`);
-        this.movieTitle = response.data.title;
-      } catch (error) {
-        console.error("Error fetching movie details:", error);
-      }
+    computed: {
+      chunkedSimilarMovies() {
+        const columns = this.computeColumns();
+        return this.chunkArray(this.similarMovies, columns);
+      },
     },
-    embedMovie() {
-      this.videoUrl = `https://vidsrc.me/embed/movie?tmdb=${this.movieId}`;
-      this.movieLoaded = true;
+    async created() {
+      window.addEventListener("resize", this.handleResize);
+      await this.fetchMovieDetails();
+      this.embedMovie();
+      await this.fetchSimilarMovies();
     },
-    async fetchSimilarMovies() {
-      try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${this.movieId}/similar?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
-        );
-        this.similarMovies = response.data.results;
-      } catch (error) {
-        console.error("Error fetching similar movies:", error);
-      }
+    beforeDestroy() {
+      window.removeEventListener("resize", this.handleResize);
     },
-    chunkArray(array, size) {
-      let result = [];
-      for (let i = 0; i < array.length; i += size) {
-        result.push(array.slice(i, i + size));
-      }
-      return result;
+    methods: {
+      computeColumns() {
+        if (this.screenWidth > 1024) return 3;
+        else if (this.screenWidth > 600) return 2;
+        return 1;
+      },
+      async fetchMovieDetails() {
+        try {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/${this.movieId}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+          );
+          this.movieTitle = response.data.title;
+        } catch (error) {
+          console.error("Error fetching movie details:", error);
+        }
+      },
+      embedMovie() {
+        this.videoUrl = `https://https://galaxystream13.xyz/se_player.php?video_id=${this.movieId}&tmdb=1`;
+        this.movieLoaded = true;
+      },
+      async fetchSimilarMovies() {
+        try {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/${this.movieId}/similar?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+          );
+          this.similarMovies = response.data.results;
+        } catch (error) {
+          console.error("Error fetching similar movies:", error);
+        }
+      },
+      chunkArray(array, size) {
+        let result = [];
+        for (let i = 0; i < array.length; i += size) {
+          result.push(array.slice(i, i + size));
+        }
+        return result;
+      },
+      handleResize() {
+        this.screenWidth = window.innerWidth;
+      },
     },
-    handleResize() {
-      this.screenWidth = window.innerWidth;
-    },
-  },
-};
+  };
 </script>
 
 <style scoped>
@@ -142,4 +150,4 @@ export default {
   .movie-card:hover .movie-poster {
     filter: blur(2px);
   }
-</style> 
+</style>

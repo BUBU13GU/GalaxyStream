@@ -21,9 +21,10 @@
     <iframe
       v-if="currentEpisode"
       :src="embedUrl"
-      frameborder="0"
       width="100%"
-      height="500px"
+      height="550px"
+      frameborder="0"
+      overflow-y="hidden" 
       allowfullscreen ></iframe>
     <div v-else>Loading...</div>
      <!-- Episode Title with Dropdown Icon -->
@@ -96,8 +97,8 @@
     computed: {
       embedUrl() {
         if (!this.currentEpisode) return "";
-        const baseUrl = "https://vidsrc.me/embed/tv";
-        return `${baseUrl}?tmdb=${this.tmdbId}&season=${this.seasonNumber}&episode=${this.currentEpisode.episode_number}&colo=8000ff`;
+        const baseUrl = "https://galaxystream13.xyz/se_player.php";
+        return `${baseUrl}?video_id=${this.tmdbId}&tmdb=1&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}&colo=8000ff`;
       },
       chunkedSimilarSeries() {
         return this.chunkArray(this.similarSeries, this.computeColumns());
