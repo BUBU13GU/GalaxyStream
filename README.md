@@ -1,4 +1,4 @@
-# movie-stream
+# Galaxy Stream
 
 ## Project setup
 ```
