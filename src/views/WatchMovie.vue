@@ -79,7 +79,7 @@
         }
       },
       embedMovie() {
-        this.videoUrl = `https://https://galaxystream13.xyz/se_player.php?video_id=${this.movieId}&tmdb=1`;
+        this.videoUrl = `https://movie-stream-13.web.app/se_player.php?video_id=${this.movieId}&tmdb=1`;
         this.movieLoaded = true;
       },
       async fetchSimilarMovies() {
