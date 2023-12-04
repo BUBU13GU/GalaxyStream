@@ -21,7 +21,7 @@
           <v-card-text>
             <p><strong>Genres:</strong> {{ movie.genres.map(genre => genre.name).join(', ') }}</p>
             <p><strong>Year:</strong> {{ movie.release_date.split('/')[0] }}{{ movie.release_date.split('/')[2] }}{{ movie.release_date.split('/')[1]}}</p>
-            <p><strong>Rating:</strong> {{ movie.vote_average }} / 10</p>
+            <p><strong>Rating:</strong> {{ Math.round(movie.vote_average) }}  / 10</p>
             <p><strong>Description:</strong> {{ movie.overview }}</p>
           </v-card-text>
         </v-card>
@@ -117,4 +117,7 @@ export default {
   width: 100%;
   height: auto;
 }
+button {
+    margin: 10px;
+  }
 </style>

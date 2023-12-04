@@ -66,7 +66,6 @@ export default {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/movie/${this.movieId}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`);
         this.movieTitle = response.data.title;
-        // ... other details if needed
       } catch (error) {
         console.error("Error fetching movie details:", error);
       }

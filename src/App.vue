@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <div class="particle-background"></div>
     <v-main>
+      <div class="particle-background"></div>
       <Navbar />
       <router-view/>
     </v-main>

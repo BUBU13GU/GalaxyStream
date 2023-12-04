@@ -221,7 +221,21 @@ h1, h2, h3 {
   z-index: -1;
   overflow: hidden;
 }
-
+@media (max-width: 600px) {
+  .v-window__prev {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .v-window__next {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .carousel-container {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust for smaller screens */
+  }
+}
 .particle-background::before, .particle-background::after {
   content: '';
   position: absolute;

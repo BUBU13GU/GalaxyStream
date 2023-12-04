@@ -12,8 +12,7 @@
         <div class="details-overlay" v-show="showDetails">
           <div class="details-text">
             <h3>{{ series.name }}</h3>
-            <p>Seasons: {{ series.number_of_seasons }}</p>
-            <p>Rating: {{ series.vote_average }} / 10</p>
+            <p>Rating: {{ Math.round(series.vote_average) }} / 10</p>
             <v-btn color="var(--primary-color)" rounded @click="goToSeriesDetails(series.id)">Details</v-btn>
           </div>
         </div>

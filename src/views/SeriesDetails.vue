@@ -20,7 +20,7 @@
               {{ series.genres.map((genre) => genre.name).join(", ") }}
             </p>
             <p><strong>First Air Date:</strong> {{ series.first_air_date }}</p>
-            <p><strong>Rating:</strong> {{ series.vote_average }} / 10</p>
+            <p><strong>Rating:</strong> {{ Math.round(series.vote_average) }} / 10</p>
             <p><strong>Description:</strong> {{ series.overview }}</p>
           </v-card-text>
         </v-card>
@@ -147,5 +147,8 @@
   .series-poster {
     width: 100%;
     height: auto;
+  }
+  button {
+    margin: 10px;
   }
 </style>

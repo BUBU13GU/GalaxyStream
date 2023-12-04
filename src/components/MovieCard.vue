@@ -12,7 +12,7 @@
       <div class="details-overlay" v-show="showDetails">
         <div class="details-text">
           <h3>{{ movie.title }}</h3>
-          <p>Rating: {{ movie.vote_average }} / 10</p>
+          <p>Rating: {{ Math.round(movie.vote_average) }} / 10</p>
           <v-btn color="var(--primary-color) " rounded @click="goToMovieDetails(movie.id)">Details</v-btn>
         </div>
       </div>
