@@ -97,7 +97,7 @@
     computed: {
       embedUrl() {
         if (!this.currentEpisode) return "";
-        const baseUrl = "https://movie-stream-13.web.app//se_player.php";
+        const baseUrl = "https://multiembed.mov/directstream.php";
         return `${baseUrl}?video_id=${this.tmdbId}&tmdb=1&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}&colo=8000ff`;
       },
       chunkedSimilarSeries() {
