@@ -71,7 +71,7 @@ export default {
       }
     },
     embedMovie() {
-      this.videoUrl = `https://vidsrc.xyz/embed/movie?tmdb=${this.movieId}`;
+      this.videoUrl = `https://vidsrc.me/embed/movie?tmdb=${this.movieId}`;
       this.movieLoaded = true;
     },
     async fetchSimilarMovies() {

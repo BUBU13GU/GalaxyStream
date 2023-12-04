@@ -2,7 +2,7 @@
   <v-container>
      <!-- Series Title with Dropdown Icon -->
      <div class="title-container" @click="toggleSeasonDropdown">
-      <h1>Watch: {{ seriesTitle }} : Season {{ seasonNumber }}</h1>
+      <h1>Watch: {{ seriesTitle }}  Season {{ seasonNumber }}</h1>
       <v-icon color="var(--primary-color)">mdi-chevron-down</v-icon> <!-- Dropdown icon -->
     </div>
 
@@ -24,7 +24,7 @@
       frameborder="0"
       width="100%"
       height="500px"
-      allowfullscreen></iframe>
+      allowfullscreen ></iframe>
     <div v-else>Loading...</div>
      <!-- Episode Title with Dropdown Icon -->
      <div v-if="currentEpisode" class="episode-title-container" @click="toggleEpisodeDropdown">
@@ -96,8 +96,8 @@
     computed: {
       embedUrl() {
         if (!this.currentEpisode) return "";
-        const baseUrl = "https://vidsrc.xyz/embed/tv";
-        return `${baseUrl}?tmdb=${this.tmdbId}&season=${this.seasonNumber}&episode=${this.currentEpisode.episode_number}`;
+        const baseUrl = "https://vidsrc.me/embed/tv";
+        return `${baseUrl}?tmdb=${this.tmdbId}&season=${this.seasonNumber}&episode=${this.currentEpisode.episode_number}&colo=8000ff`;
       },
       chunkedSimilarSeries() {
         return this.chunkArray(this.similarSeries, this.computeColumns());

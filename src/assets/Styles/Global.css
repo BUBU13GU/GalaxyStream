@@ -221,6 +221,18 @@ h1, h2, h3 {
   z-index: -1;
   overflow: hidden;
 }
+@keyframes particleSpread {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+  }
+  100% {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+  }
+}
 @media (max-width: 600px) {
   .v-window__prev {
     display: none;
@@ -249,15 +261,3 @@ h1, h2, h3 {
   animation: particleSpread 5s linear infinite;
 }
 
-@keyframes particleSpread {
-  0% {
-    width: 10px;
-    height: 10px;
-    opacity: 1;
-  }
-  100% {
-    width: 300px;
-    height: 300px;
-    opacity: 0;
-  }
-}
