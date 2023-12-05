@@ -15,7 +15,7 @@
     </v-app-bar>
 
     <!-- Navigation Drawer -->
-    <v-navigation-drawer v-model="drawer" app class="drawer">
+    <v-navigation-drawer v-model="drawer" app class="drawer" ref="drawer">
       <img src="@/assets/logo.png" alt="Logo" class="drawer-logo" />
       <v-list dense>
         <v-list-item @click="goToHome" class="drawer-item">
@@ -48,6 +48,14 @@ export default {
       drawer: false,
     };
   },
+  mounted() {
+    // Add global click event listener
+    document.addEventListener('click', this.handleClickOutside);
+  },
+  beforeDestroy() {
+    // Remove event listener when component is destroyed
+    document.removeEventListener('click', this.handleClickOutside);
+  },
   methods: {
     goToHome() {
       this.$router.push("/");
@@ -60,6 +68,12 @@ export default {
     },
     toggleDrawer() {
       this.drawer = !this.drawer;
+    },
+    handleClickOutside(event) {
+      // Check if click was outside the drawer and if the drawer is open
+      if (this.drawer && !this.$refs.drawer.$el.contains(event.target)) {
+        this.drawer = false;
+      }
     }
   },
 };
