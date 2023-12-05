@@ -1,9 +1,10 @@
 <template>
   <v-container>
-     <!-- Series Title with Dropdown Icon -->
-     <div class="title-container" @click="toggleSeasonDropdown">
-      <h1>Watch: {{ seriesTitle }}  Season {{ seasonNumber }}</h1>
-      <v-icon color="var(--primary-color)">mdi-chevron-down</v-icon> <!-- Dropdown icon -->
+    <!-- Series Title with Dropdown Icon -->
+    <div class="title-container" @click="toggleSeasonDropdown">
+      <h1>Watch: {{ seriesTitle }} Season {{ seasonNumber }}</h1>
+      <v-icon color="var(--primary-color)">mdi-chevron-down</v-icon>
+      <!-- Dropdown icon -->
     </div>
 
     <!-- Seasons Dropdown -->
@@ -24,15 +25,19 @@
       width="100%"
       height="550px"
       frameborder="0"
-      overflow-y="hidden" 
-      allowfullscreen ></iframe>
+      overflow-y="hidden"
+      allowfullscreen></iframe>
     <div v-else>Loading...</div>
-     <!-- Episode Title with Dropdown Icon -->
-     <div v-if="currentEpisode" class="episode-title-container" @click="toggleEpisodeDropdown">
+    <!-- Episode Title with Dropdown Icon -->
+    <div
+      v-if="currentEpisode"
+      class="episode-title-container"
+      @click="toggleEpisodeDropdown">
       <h1>
         Episode {{ currentEpisode.episode_number }}: {{ currentEpisode.name }}
       </h1>
-      <v-icon color="var(--primary-color)">mdi-chevron-down</v-icon> <!-- Dropdown icon -->
+      <v-icon color="var(--primary-color)">mdi-chevron-down</v-icon>
+      <!-- Dropdown icon -->
     </div>
 
     <!-- Episodes Dropdown -->
@@ -49,24 +54,24 @@
 
     <!-- Similar Series Carousel -->
     <div>
-    <h1 v-if="similarSeries.length > 0">Similar Series</h1>
-    <v-carousel hide-delimiters v-if="similarSeries.length > 0">
-      <v-carousel-item
-        v-for="(group, index) in chunkedSimilarSeries"
-        :key="index">
-        <v-row>
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-            v-for="series in group"
-            :key="series.id">
-            <series-card :series="series"></series-card>
-          </v-col>
-        </v-row>
-      </v-carousel-item>
-    </v-carousel>
-  </div>
+      <h1 v-if="similarSeries.length > 0">Similar Series</h1>
+      <v-carousel hide-delimiters v-if="similarSeries.length > 0">
+        <v-carousel-item
+          v-for="(group, index) in chunkedSimilarSeries"
+          :key="index">
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+              v-for="series in group"
+              :key="series.id">
+              <series-card :series="series"></series-card>
+            </v-col>
+          </v-row>
+        </v-carousel-item>
+      </v-carousel>
+    </div>
   </v-container>
 </template>
 

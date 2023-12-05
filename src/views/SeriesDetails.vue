@@ -20,7 +20,10 @@
               {{ series.genres.map((genre) => genre.name).join(", ") }}
             </p>
             <p><strong>First Air Date:</strong> {{ series.first_air_date }}</p>
-            <p><strong>Rating:</strong> {{ Math.round(series.vote_average) }} / 10</p>
+            <p>
+              <strong>Rating:</strong> {{ Math.round(series.vote_average) }} /
+              10
+            </p>
             <p><strong>Description:</strong> {{ series.overview }}</p>
           </v-card-text>
         </v-card>
@@ -28,7 +31,11 @@
         <!-- Season Selection Dropdown Button -->
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="var(--primary-color)" rounded v-bind="attrs" v-on="on">
+            <v-btn
+              color="var(--primary-color)"
+              rounded
+              v-bind="attrs"
+              v-on="on">
               Select a Season
               <v-icon right>mdi-menu-down</v-icon>
             </v-btn>
@@ -45,7 +52,9 @@
           </v-list>
         </v-menu>
         <!-- Buttons -->
-        <v-btn color="var(--accent-color-light)" rounded @click="showTrailer">Show Trailer</v-btn>
+        <v-btn color="var(--accent-color-light)" rounded @click="showTrailer"
+          >Show Trailer</v-btn
+        >
       </v-col>
     </v-row>
 
@@ -108,16 +117,16 @@
         }
       },
       goToWatchSeries(seasonNumber) {
-    if (!seasonNumber) return;
-    this.$router.push({
-      name: 'WatchSeries',
-      params: {
-        tmdbId: this.series.id,
-        season: seasonNumber,
-        seriesTitle: this.series.name
-      }
-    });
-  },
+        if (!seasonNumber) return;
+        this.$router.push({
+          name: "WatchSeries",
+          params: {
+            tmdbId: this.series.id,
+            season: seasonNumber,
+            seriesTitle: this.series.name,
+          },
+        });
+      },
 
       async showTrailer() {
         try {
