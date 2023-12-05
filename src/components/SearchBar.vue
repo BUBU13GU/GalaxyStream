@@ -47,5 +47,8 @@ export default {
 .custom-icon-color {
   color: var(--primary-color);
 }
-
+.v-application .primary--text {
+    color:  var(--primary-color) !important;
+    caret-color: var(--primary-color) !important;
+}
 </style>
