@@ -543,9 +543,17 @@ export default {
       else if (this.screenWidth > 600) return 2;
       return 1;
     },
+    shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  },
     async fetchMoviesByGenre(genreId, targetArrayName) {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.VUE_APP_TMDB_API_KEY}&with_genres=${genreId}`);
+        let movies = response.data.results;
+        this.shuffle(movies);
         this[targetArrayName] = response.data.results;
       } catch (error) {
         console.error(`Error fetching movies for genre ${genreId}:`, error);
@@ -554,6 +562,8 @@ export default {
     async fetchSeriesByGenre(genreId, targetArrayName) {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${process.env.VUE_APP_TMDB_API_KEY}&with_genres=${genreId}`);
+        let series = response.data.results;
+        this.shuffle(series);
         this[targetArrayName] = response.data.results;
       } catch (error) {
         console.error(`Error fetching series for genre ${genreId}:`, error);
