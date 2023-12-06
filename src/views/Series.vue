@@ -97,6 +97,7 @@
         seriesPerPage: 20,
         showScrollButton: false,
         showCalendar: false,
+        selectedYear: null,
         minYear: 1900,
         maxYear: new Date().getFullYear(),
       };
@@ -119,7 +120,7 @@
           const response = await axios.get(
             `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=${this.currentPage}`
           );
-          this.allSeries = [...this.allSeries, ...response.data.results];
+          this.allSeries = [...this.allSeries, ...response.data.results].filter(series => series.vote_average !== 0);
           this.updateDisplayedSeries();
           this.totalPages = response.data.total_pages;
           this.currentPage++;
@@ -133,7 +134,7 @@
         this.displayedSeries = this.allSeries.slice(
           0,
           this.currentPage * this.seriesPerPage
-        );
+        ).filter(series => series.vote_average !== 0);
         this.sortSeries();
       },
       loadMoreSeries() {
@@ -145,35 +146,32 @@
         this.sortSeries();
       },
       async sortByYear() {
-    const selectedDate = new Date(this.selectedYear);
-    const year = selectedDate.getFullYear();
-    const month = selectedDate.getMonth() + 1; // JavaScript months are 0-indexed
-    const day = selectedDate.getDate();
+        const selectedDate = new Date(this.selectedYear);
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth() + 1;
+        const day = selectedDate.getDate();
 
-    let queryURL = `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&sort_by=first_air_date.asc&first_air_date.gte=${year}-${month}-${day}&first_air_date.lte=${year}-${month}-${day}`;
+        let queryURL = `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&sort_by=first_air_date.asc&first_air_date.gte=${year}-${month}-${day}&first_air_date.lte=${year}-${month}-${day}`;
 
-    this.loading = true;
-    try {
-      let response = await axios.get(queryURL);
+        this.loading = true;
+        try {
+          let response = await axios.get(queryURL);
 
-      if (response.data.results.length === 0) {
-        // Fallback to querying the entire year if no results are found for a specific day
-        queryURL = `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&sort_by=first_air_date.asc&first_air_date.gte=${year}-01-01&first_air_date.lte=${year}-12-31`;
-        response = await axios.get(queryURL);
-      }
-      this.displayedSeries = response.data.results;
-    } catch (error) {
-      console.error("Error fetching series:", error);
-      // Handle errors appropriately
-    } finally {
-      this.loading = false;
-    }
-  },
+          if (response.data.results.length === 0) {
+            queryURL = `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&sort_by=first_air_date.asc&first_air_date.gte=${year}-01-01&first_air_date.lte=${year}-12-31`;
+            response = await axios.get(queryURL);
+          }
+          this.displayedSeries = response.data.results.filter(series => series.vote_average !== 0);
+        } catch (error) {
+          console.error("Error fetching series:", error);
+        } finally {
+          this.loading = false;
+        }
+      },
       clearDate() {
-        this.selectedYear = null; // Reset the selected year
-        this.showCalendar = false; // Close the calendar
-        this.sortType = "alpha"; // Reset the sort type or adjust as needed
-        this.fetchSeriesPage();// Re-sort the series list based on the reset
+        this.selectedYear = null;
+        this.showCalendar = false;
+        this.fetchSeriesPage();
       },
       sortSeries() {
         if (this.sortType === "alpha") {
@@ -183,8 +181,7 @@
               : a.name.localeCompare(b.name)
           );
         } else {
-          // Ensure first_air_date is in correct format
-          this.displayedSeries = this.allSeries.filter((series) => {
+          this.displayedSeries = this.allSeries.filter(series => {
             const airYear = series.first_air_date
               ? new Date(series.first_air_date).getFullYear()
               : null;
@@ -196,17 +193,16 @@
         const selectedYear = new Date(val).getFullYear();
         const selectedMonth = new Date(val).getMonth();
         const availableDates = this.allSeries
-          .map((s) => (s.first_air_date ? new Date(s.first_air_date) : null))
-          .filter((d) => d != null);
+          .map(s => s.first_air_date ? new Date(s.first_air_date) : null)
+          .filter(d => d != null);
 
-        return availableDates.some((date) => {
+        return availableDates.some(date => {
           return (
             date.getFullYear() === selectedYear &&
             date.getMonth() === selectedMonth
           );
         });
       },
-
       onDateSelection(val) {
         if (!this.allowedDates(val)) {
           this.promptLoadMore();
@@ -215,17 +211,13 @@
           this.sortByYear();
         }
       },
-
       promptLoadMore() {
         alert("Please load more series to select this date.");
       },
-      // Modify the method that fetches series data to update minYear and maxYear
       updateYearRange() {
         const years = this.allSeries
-          .map((s) =>
-            s.first_air_date ? new Date(s.first_air_date).getFullYear() : null
-          )
-          .filter((y) => y != null);
+          .map(s => s.first_air_date ? new Date(s.first_air_date).getFullYear() : null)
+          .filter(y => y != null);
 
         if (years.length > 0) {
           this.minYear = Math.min(...years);
@@ -247,6 +239,7 @@
     },
   };
 </script>
+
 
 <style scoped>
   .series-card {
