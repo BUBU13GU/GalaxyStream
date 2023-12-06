@@ -67,7 +67,7 @@
                 process.env.VUE_APP_TMDB_API_KEY
               }&query=${encodeURIComponent(this.query)}`
             );
-            this.movieSearchResults = movieResponse.data.results;
+            this.movieSearchResults = this.filterResults(movieResponse.data.results);
 
             // Fetch series
             const seriesResponse = await axios.get(
@@ -75,7 +75,7 @@
                 process.env.VUE_APP_TMDB_API_KEY
               }&query=${encodeURIComponent(this.query)}`
             );
-            this.seriesSearchResults = seriesResponse.data.results;
+            this.seriesSearchResults = this.filterResults(seriesResponse.data.results);
           } catch (error) {
             console.error("Error fetching search results:", error);
           }
@@ -84,6 +84,10 @@
           this.movieSearchResults = [];
           this.seriesSearchResults = [];
         }
+      },
+      filterResults(results) {
+        // Filter out items with a score of 0
+        return results.filter(item => item.vote_average > 0);
       },
     },
   };
