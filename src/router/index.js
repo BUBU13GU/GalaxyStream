@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Categories from '../views/Categories.vue'
+import Movies from '../views/Movies.vue';
+import Series from '../views/Series.vue';
 import SearchResults from '../views/SearchResults.vue';
 import MovieDetails from '../views/MovieDetails.vue';
 import SeriesDetails from '../views/SeriesDetails.vue';
@@ -21,6 +23,16 @@ const routes = [
     path: '/Categories',
     name: 'Categories',
     component: Categories,
+  },
+  {
+    path: '/movies',
+    name: 'Movies',
+    component: Movies,
+  },
+  {
+    path: '/series',
+    name: 'Series',
+    component: Series,
   },
   {
     path: '/search',
