@@ -157,6 +157,7 @@
         const month = selectedDate.getMonth() + 1; // JavaScript months are 0-indexed
         const day = selectedDate.getDate();
 
+        
         let dayQueryURL = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&sort_by=release_date.asc&primary_release_date.gte=${year}-${month}-${day}&primary_release_date.lte=${year}-${month}-${day}`;
 
         this.loading = true;
