@@ -3,7 +3,7 @@
     <!-- Series Title with Dropdown Icon -->
     <div class="title-container" @click="toggleSeasonDropdown">
       <h1>Watch: {{ seriesTitle }} Season {{ seasonNumber }}</h1>
-      <v-icon color="var(--primary-color)">mdi-chevron-down</v-icon>
+      <v-icon color="var(--primary-color)"  dark >mdi-chevron-down</v-icon>
       <!-- Dropdown icon -->
     </div>
 
@@ -12,7 +12,7 @@
       <v-btn
         v-for="season in totalSeasons"
         :key="season"
-        color="var(--primary-color)"
+        color="var(--primary-color)"  dark 
         @click="changeSeason(season)"
         rounded>
         Season {{ season }}
@@ -36,7 +36,7 @@
       <h1>
         Episode {{ currentEpisode.episode_number }}: {{ currentEpisode.name }}
       </h1>
-      <v-icon color="var(--primary-color)">mdi-chevron-down</v-icon>
+      <v-icon color="var(--primary-color)"   dark >mdi-chevron-down</v-icon>
       <!-- Dropdown icon -->
     </div>
 
@@ -45,7 +45,7 @@
       <v-btn
         v-for="episode in episodes"
         :key="episode.id"
-        color="var(--primary-color)"
+        color="var(--primary-color)"  dark 
         @click="setCurrentEpisode(episode)"
         rounded>
         Episode {{ episode.episode_number }}

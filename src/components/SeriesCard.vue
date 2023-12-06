@@ -13,7 +13,7 @@
           <div class="details-text">
             <h3>{{ series.name }}</h3>
             <p>Rating: {{ Math.round(series.vote_average) }} / 10</p>
-            <v-btn color="var(--primary-color)" rounded @click="goToSeriesDetails(series.id)">Details</v-btn>
+            <v-btn color="var(--primary-color)" dark rounded @click="goToSeriesDetails(series.id)">Details</v-btn>
           </div>
         </div>
       </div>

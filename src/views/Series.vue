@@ -5,18 +5,17 @@
       <!-- Sorting Controls -->
       <v-row class="mb-3">
         <v-col>
-          <v-btn color="var(--primary-color)" rounded @click="toggleAlphabeticalSort">
+          <v-btn color="var(--primary-color)"  dark rounded @click="toggleAlphabeticalSort">
             Sort Alphabetically {{ alphabeticalSortOrder }}
           </v-btn>
   
           <v-menu v-model="showCalendar" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="var(--primary-color)" rounded v-bind="attrs" v-on="on">Choose Year</v-btn>
+              <v-btn color="var(--primary-color)"  dark rounded v-bind="attrs" v-on="on">Choose Year</v-btn>
             </template>
             <v-date-picker v-model="selectedYear" @input="showCalendar = false" @change="sortByYear" :allowed-dates="allowedDates"></v-date-picker>
           </v-menu>
   
-          <v-btn color="var(--primary-color)" rounded @click="flipOrder">Flip Order</v-btn>
         </v-col>
       </v-row>
   
@@ -35,7 +34,7 @@
       <!-- Load More Button -->
       <v-row>
         <v-col class="text-center">
-          <v-btn color="secondary" @click="loadMoreSeries" :disabled="loading">Load More</v-btn>
+          <v-btn color="var(--accent-color-light)" dark rounded @click="loadMoreSeries" :disabled="loading">Load More</v-btn>
         </v-col>
       </v-row>
     </v-container>

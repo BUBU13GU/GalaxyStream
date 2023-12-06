@@ -32,7 +32,7 @@
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              color="var(--primary-color)"
+             color="var(--primary-color)"  dark 
               rounded
               v-bind="attrs"
               v-on="on">
@@ -52,7 +52,7 @@
           </v-list>
         </v-menu>
         <!-- Buttons -->
-        <v-btn color="var(--accent-color-light)" rounded @click="showTrailer"
+        <v-btn color="var(--accent-color-light)" dark rounded @click="showTrailer"
           >Show Trailer</v-btn
         >
       </v-col>

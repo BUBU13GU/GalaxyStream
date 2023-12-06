@@ -44,7 +44,7 @@
             @click="goToWatchMoviePage"
             >Watch Movie</v-btn
           >
-          <v-btn color="var(--accent-color-light)" rounded @click="showTrailer"
+          <v-btn color="var(--accent-color-light)" dark rounded  @click="showTrailer"
             >Show Trailer</v-btn
           >
         </v-row>
@@ -71,7 +71,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="var(--accent-color-light)" rounded @click="closeTrailer"
+          <v-btn color="var(--accent-color-light)" dark rounded @click="closeTrailer"
             >Close</v-btn
           >
         </v-card-actions>
