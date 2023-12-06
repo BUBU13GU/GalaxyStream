@@ -166,65 +166,41 @@
         else if (this.screenWidth > 600) return 2; // Medium screens
         return 1; // Small screens
       },
+      async fetchTrendingMovies() {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/trending/movie/day?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+        );
+        this.trendingMovies = response.data.results;
+      },
       async fetchLatestMovies() {
-        try {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
-          );
-          this.latestMovies = response.data.results.filter(
-            (movie) => movie.vote_average > 0
-          );
-        } catch (error) {
-          console.error("Error fetching latest movies:", error);
-        }
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
+        );
+        this.latestMovies = response.data.results;
       },
       async fetchTopRatedMovies() {
-        try {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
-          );
-          this.topRatedMovies = response.data.results.filter(
-            (movie) => movie.vote_average > 0
-          );
-        } catch (error) {
-          console.error("Error fetching top-rated movies:", error);
-        }
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
+        );
+        this.topRatedMovies = response.data.results;
       },
       async fetchTrendingSeries() {
-        try {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
-          );
-          this.trendingSeries = response.data.results.filter(
-            (series) => series.vote_average > 0
-          );
-        } catch (error) {
-          console.error("Error fetching trending series:", error);
-        }
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+        );
+        this.trendingSeries = response.data.results;
       },
       async fetchLatestSeries() {
-        try {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/tv/on_the_air?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
-          );
-          this.latestSeries = response.data.results.filter(
-            (series) => series.vote_average > 0
-          );
-        } catch (error) {
-          console.error("Error fetching latest series:", error);
-        }
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/tv/on_the_air?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
+        );
+        this.latestSeries = response.data.results;
       },
       async fetchTopRatedSeries() {
-        try {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/tv/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
-          );
-          this.topRatedSeries = response.data.results.filter(
-            (series) => series.vote_average > 0
-          );
-        } catch (error) {
-          console.error("Error fetching top-rated series:", error);
-        }
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/tv/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
+        );
+        this.topRatedSeries = response.data.results;
       },
       chunkArray(array, size) {
         let result = [];
