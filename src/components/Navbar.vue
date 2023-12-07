@@ -138,6 +138,7 @@
     max-width: 200px;
     max-height: 200px;
     border-radius: 50%;
+    margin-left: 10%;
   }
   /* Navigation Drawer Styles */
   .drawer {

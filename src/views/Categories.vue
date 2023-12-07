@@ -719,37 +719,37 @@
       this.fetchMoviesByGenre(12, "adventureMovies"); // Adventure
       this.fetchSeriesByGenre(10759, "adventureSeries"); // Adventure
       this.fetchMoviesByGenre(16, "animationMovies"); // Animation
-      this.fetchSeriesByGenre(10759, "animationSeries"); // Animation
+      this.fetchSeriesByGenre(16, "animationSeries"); // Animation
       this.fetchMoviesByGenre(35, "comedyMovies"); // Comedy
-      this.fetchSeriesByGenre(10759, "comedySeries"); // Comedy
+      this.fetchSeriesByGenre(35, "comedySeries"); // Comedy
       this.fetchMoviesByGenre(80, "crimeMovies"); // Crime
-      this.fetchSeriesByGenre(10759, "crimeSeries"); // Crime
+      this.fetchSeriesByGenre(80, "crimeSeries"); // Crime
       this.fetchMoviesByGenre(99, "documentaryMovies"); // Documentary
-      this.fetchSeriesByGenre(10759, "documentarySeries"); // Documentary
+      this.fetchSeriesByGenre(99, "documentarySeries"); // Documentary
       this.fetchMoviesByGenre(18, "dramaMovies"); // Drama
-      this.fetchSeriesByGenre(10759, "dramaSeries"); // Drama
+      this.fetchSeriesByGenre(18, "dramaSeries"); // Drama
       this.fetchMoviesByGenre(10751, "familyMovies"); // Family
-      this.fetchSeriesByGenre(10759, "familySeries"); // Family
+      this.fetchSeriesByGenre(10751, "familySeries"); // Family
       this.fetchMoviesByGenre(14, "fantasyMovies"); // Fantasy
-      this.fetchSeriesByGenre(10759, "fantasySeries"); // Fantasy
+      this.fetchSeriesByGenre(10765, "fantasySeries"); // Fantasy
       this.fetchMoviesByGenre(36, "historyMovies"); // History
-      this.fetchSeriesByGenre(10759, "historySeries"); // History
+      this.fetchSeriesByGenre( 99, "historySeries"); // History
       this.fetchMoviesByGenre(27, "horrorMovies"); // Horror
-      this.fetchSeriesByGenre(10759, "horrorSeries"); // Horror
+      this.fetchSeriesByGenre(80, "horrorSeries"); // Horror
       this.fetchMoviesByGenre(10402, "musicMovies"); // Music
-      this.fetchSeriesByGenre(10759, "musicSeries"); // Music
+      this.fetchSeriesByGenre(10767, "musicSeries"); // Music
       this.fetchMoviesByGenre(9648, "mysteryMovies"); // Mystery
-      this.fetchSeriesByGenre(10759, "mysterySeries"); // Mystery
+      this.fetchSeriesByGenre(9648, "mysterySeries"); // Mystery
       this.fetchMoviesByGenre(10749, "romanceMovies"); // Romance
-      this.fetchSeriesByGenre(10759, "romanceSeries"); // Romance
+      this.fetchSeriesByGenre(10764, "romanceSeries"); // Romance
       this.fetchMoviesByGenre(878, "scienceFictionMovies"); // Science Fiction
-      this.fetchSeriesByGenre(10759, "scienceFictionSeries"); // Science Fiction
+      this.fetchSeriesByGenre(10765, "scienceFictionSeries"); // Science Fiction
       this.fetchMoviesByGenre(53, "thrillerMovies"); // Thriller
       this.fetchSeriesByGenre(10759, "thrillerSeries"); // Thriller
       this.fetchMoviesByGenre(10752, "warMovies"); // War
-      this.fetchSeriesByGenre(10759, "warSeries"); // War
+      this.fetchSeriesByGenre(10768, "warSeries"); // War
       this.fetchMoviesByGenre(37, "westernMovies"); // Western
-      this.fetchSeriesByGenre(10759, "westernSeries"); // Western
+      this.fetchSeriesByGenre(37, "westernSeries"); // Western
     },
     beforeDestroy() {
       window.removeEventListener("resize", this.handleResize);
