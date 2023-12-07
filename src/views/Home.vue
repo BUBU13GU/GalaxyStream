@@ -101,124 +101,166 @@
         </v-row>
       </v-carousel-item>
     </v-carousel>
+    <v-btn
+      fab
+      dark
+      fixed
+      bottom
+      right
+      color="var(--primary-color)"
+      v-show="showScrollButton"
+      @click="scrollTop"
+      class="elevation-12">
+      <v-icon>mdi-chevron-up</v-icon>
+    </v-btn>
   </v-container>
 </template>
 
 <script>
-import axios from "axios";
-import MovieCard from "../components/MovieCard.vue";
-import SeriesCard from "../components/SeriesCard.vue";
+  import axios from "axios";
+  import MovieCard from "../components/MovieCard.vue";
+  import SeriesCard from "../components/SeriesCard.vue";
 
-export default {
-  components: {
-    MovieCard,
-    SeriesCard,
-  },
-  data() {
-    return {
-      trendingMovies: [],
-      latestMovies: [],
-      topRatedMovies: [],
-      trendingSeries: [],
-      latestSeries: [],
-      topRatedSeries: [],
-      screenWidth: window.innerWidth,
-      filterZeroRated: false, // Added to enable filtering
-    };
-  },
-  computed: {
-    chunkedTrendingMovies() {
-      return this.chunkArray(this.filterData(this.trendingMovies), this.computeChunks());
+  export default {
+    components: {
+      MovieCard,
+      SeriesCard,
     },
-    chunkedLatestMovies() {
-      return this.chunkArray(this.filterData(this.latestMovies), this.computeChunks());
+    data() {
+      return {
+        trendingMovies: [],
+        latestMovies: [],
+        topRatedMovies: [],
+        trendingSeries: [],
+        latestSeries: [],
+        topRatedSeries: [],
+        screenWidth: window.innerWidth,
+        showScrollButton: false,
+        filterZeroRated: false, // Added to enable filtering
+      };
     },
-    chunkedTopRatedMovies() {
-      return this.chunkArray(this.filterData(this.topRatedMovies), this.computeChunks());
+    computed: {
+      chunkedTrendingMovies() {
+        return this.chunkArray(
+          this.filterData(this.trendingMovies),
+          this.computeChunks()
+        );
+      },
+      chunkedLatestMovies() {
+        return this.chunkArray(
+          this.filterData(this.latestMovies),
+          this.computeChunks()
+        );
+      },
+      chunkedTopRatedMovies() {
+        return this.chunkArray(
+          this.filterData(this.topRatedMovies),
+          this.computeChunks()
+        );
+      },
+      chunkedTrendingSeries() {
+        return this.chunkArray(
+          this.filterData(this.trendingSeries),
+          this.computeChunks()
+        );
+      },
+      chunkedLatestSeries() {
+        return this.chunkArray(
+          this.filterData(this.latestSeries),
+          this.computeChunks()
+        );
+      },
+      chunkedTopRatedSeries() {
+        return this.chunkArray(
+          this.filterData(this.topRatedSeries),
+          this.computeChunks()
+        );
+      },
     },
-    chunkedTrendingSeries() {
-      return this.chunkArray(this.filterData(this.trendingSeries), this.computeChunks());
+    created() {
+      window.addEventListener("resize", this.handleResize);
+      this.fetchTrendingMovies();
+      this.fetchLatestMovies();
+      this.fetchTopRatedMovies();
+      this.fetchTrendingSeries();
+      this.fetchLatestSeries();
+      this.fetchTopRatedSeries();
     },
-    chunkedLatestSeries() {
-      return this.chunkArray(this.filterData(this.latestSeries), this.computeChunks());
+    beforeDestroy() {
+      window.removeEventListener("resize", this.handleResize);
     },
-    chunkedTopRatedSeries() {
-      return this.chunkArray(this.filterData(this.topRatedSeries), this.computeChunks());
+    methods: {
+      handleResize() {
+        this.screenWidth = window.innerWidth;
+      },
+      computeChunks() {
+        if (this.screenWidth > 1024) return 3;
+        else if (this.screenWidth > 600) return 2;
+        return 1;
+      },
+      async fetchTrendingMovies() {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/trending/movie/day?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+        );
+        this.trendingMovies = response.data.results;
+      },
+      async fetchLatestMovies() {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
+        );
+        this.latestMovies = response.data.results;
+      },
+      async fetchTopRatedMovies() {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
+        );
+        this.topRatedMovies = response.data.results;
+      },
+      async fetchTrendingSeries() {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+        );
+        this.trendingSeries = response.data.results;
+      },
+      async fetchLatestSeries() {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/tv/on_the_air?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
+        );
+        this.latestSeries = response.data.results;
+      },
+      async fetchTopRatedSeries() {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/tv/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
+        );
+        this.topRatedSeries = response.data.results;
+      },
+      scrollTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      },
+      handleScroll() {
+        this.showScrollButton = window.scrollY > 200;
+      },
+      chunkArray(array, size) {
+        let result = [];
+        for (let i = 0; i < array.length; i += size) {
+          result.push(array.slice(i, i + size));
+        }
+        return result;
+      },
+      filterData(data) {
+        return this.filterZeroRated
+          ? data.filter((item) => item.vote_average !== 0)
+          : data;
+      },
     },
-  },
-  created() {
-    window.addEventListener("resize", this.handleResize);
-    this.fetchTrendingMovies();
-    this.fetchLatestMovies();
-    this.fetchTopRatedMovies();
-    this.fetchTrendingSeries();
-    this.fetchLatestSeries();
-    this.fetchTopRatedSeries();
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize);
-  },
-  methods: {
-    handleResize() {
-      this.screenWidth = window.innerWidth;
+    mounted() {
+      window.addEventListener("scroll", this.handleScroll);
     },
-    computeChunks() {
-      if (this.screenWidth > 1024) return 3;
-      else if (this.screenWidth > 600) return 2;
-      return 1;
+    beforeDestroy() {
+      window.removeEventListener("scroll", this.handleScroll);
     },
-    async fetchTrendingMovies() {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/trending/movie/day?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
-      );
-      this.trendingMovies = response.data.results;
-    },
-    async fetchLatestMovies() {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
-      );
-      this.latestMovies = response.data.results;
-    },
-    async fetchTopRatedMovies() {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
-      );
-      this.topRatedMovies = response.data.results;
-    },
-    async fetchTrendingSeries() {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
-      );
-      this.trendingSeries = response.data.results;
-    },
-    async fetchLatestSeries() {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/tv/on_the_air?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
-      );
-      this.latestSeries = response.data.results;
-    },
-    async fetchTopRatedSeries() {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/tv/top_rated?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=1`
-      );
-      this.topRatedSeries = response.data.results;
-    },
-    chunkArray(array, size) {
-      let result = [];
-      for (let i = 0; i < array.length; i += size) {
-        result.push(array.slice(i, i + size));
-      }
-      return result;
-    },
-    filterData(data) {
-      return this.filterZeroRated
-        ? data.filter(item => item.vote_average !== 0)
-        : data;
-    }
-  },
-};
+  };
 </script>
-
 
 <style scoped>
   .movie-card {

@@ -548,6 +548,18 @@
         </v-row>
       </v-carousel-item>
     </v-carousel>
+    <v-btn
+      fab
+      dark
+      fixed
+      bottom
+      right
+      color="var(--primary-color)"
+      v-show="showScrollButton"
+      @click="scrollTop"
+      class="elevation-12">
+      <v-icon>mdi-chevron-up</v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -600,6 +612,7 @@
         westernMovies: [],
         westernSeries: [],
         screenWidth: window.innerWidth,
+        showScrollButton: false,
       };
     },
     computed: {
@@ -733,7 +746,7 @@
       this.fetchMoviesByGenre(14, "fantasyMovies"); // Fantasy
       this.fetchSeriesByGenre(10765, "fantasySeries"); // Fantasy
       this.fetchMoviesByGenre(36, "historyMovies"); // History
-      this.fetchSeriesByGenre( 99, "historySeries"); // History
+      this.fetchSeriesByGenre(99, "historySeries"); // History
       this.fetchMoviesByGenre(27, "horrorMovies"); // Horror
       this.fetchSeriesByGenre(80, "horrorSeries"); // Horror
       this.fetchMoviesByGenre(10402, "musicMovies"); // Music
@@ -781,6 +794,12 @@
           console.error(`Error fetching movies for genre ${genreId}:`, error);
         }
       },
+      scrollTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      },
+      handleScroll() {
+        this.showScrollButton = window.scrollY > 200;
+      },
       async fetchSeriesByGenre(genreId, targetArrayName) {
         try {
           const response = await axios.get(
@@ -793,6 +812,7 @@
           console.error(`Error fetching series for genre ${genreId}:`, error);
         }
       },
+
       chunkArray(array, size) {
         let result = [];
         for (let i = 0; i < array.length; i += size) {
@@ -800,6 +820,12 @@
         }
         return result;
       },
+    },
+    mounted() {
+      window.addEventListener("scroll", this.handleScroll);
+    },
+    beforeDestroy() {
+      window.removeEventListener("scroll", this.handleScroll);
     },
   };
 </script>
