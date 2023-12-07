@@ -26,12 +26,12 @@
           </template>
           <v-date-picker
             v-model="selectedYear"
-            @input="showCalendar = false"
-            @change="sortByYear"
+            @input="sortByYear"
             :allowed-dates="allowedDates"
             color="var(--primary-color)"
             reactive
-            type="date">
+            type="year">
+            <!-- Changed type to 'year' -->
             <v-spacer></v-spacer>
             <v-btn text color="var(--primary-color)" @click="clearDate"
               >Clear</v-btn
@@ -122,9 +122,7 @@
           const response = await axios.get(
             `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&page=${this.currentPage}`
           );
-          this.allMovies = [...this.allMovies, ...response.data.results].filter(
-            (movie) => movie.vote_average !== 0
-          );
+          this.allMovies = [...this.allMovies, ...response.data.results];
           this.updateDisplayedMovies();
           this.totalPages = response.data.total_pages;
           this.currentPage++;
@@ -135,10 +133,12 @@
         }
       },
       updateDisplayedMovies() {
-        this.displayedMovies = this.allMovies.slice(
-          0,
-          this.currentPage * this.moviesPerPage
-        );
+        // Filter out movies with a vote_average of 0 and then slice for pagination
+        this.displayedMovies = this.allMovies
+          .filter((movie) => movie.vote_average > 0)
+          .slice(0, this.currentPage * this.moviesPerPage);
+
+        // Apply sorting if needed
         this.sortMovies();
       },
       loadMoreMovies() {
@@ -154,25 +154,23 @@
 
         const selectedDate = new Date(this.selectedYear);
         const year = selectedDate.getFullYear();
-        const month = selectedDate.getMonth() + 1; // JavaScript months are 0-indexed
+        const month = selectedDate.getMonth() + 1;
         const day = selectedDate.getDate();
 
-        
-        let dayQueryURL = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&sort_by=release_date.asc&primary_release_date.gte=${year}-${month}-${day}&primary_release_date.lte=${year}-${month}-${day}`;
+        let queryURL = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&sort_by=release_date.asc`;
+
+        if (day !== 1 || month !== 1) {
+          const monthStr = month.toString().padStart(2, "0");
+          const dayStr = day.toString().padStart(2, "0");
+          queryURL += `&primary_release_date.gte=${year}-${monthStr}-${dayStr}&primary_release_date.lte=${year}-${monthStr}-${dayStr}`;
+        } else {
+          queryURL += `&primary_release_year=${year}`;
+        }
 
         this.loading = true;
         try {
-          let response = await axios.get(dayQueryURL);
-
-          if (response.data.results.length === 0) {
-            // Query for the entire month if no results are found for a specific day
-            let monthQueryURL = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US&sort_by=release_date.asc&primary_release_date.gte=${year}-${month}-01&primary_release_date.lte=${year}-${month}-31`;
-            response = await axios.get(monthQueryURL);
-          }
-
-          this.displayedMovies = response.data.results.filter(
-            (movie) => movie.vote_average !== 0
-          );
+          const response = await axios.get(queryURL);
+          this.displayedMovies = response.data.results;
         } catch (error) {
           console.error("Error fetching movies:", error);
         } finally {
