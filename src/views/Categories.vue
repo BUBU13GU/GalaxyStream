@@ -498,6 +498,20 @@
       </v-carousel-item>
     </v-carousel>
 
+    <!-- War Movies Carousel -->
+    <h1>War Movies</h1>
+    <v-carousel hide-delimiters>
+      <v-carousel-item
+        v-for="(group, index) in chunkedWarMovies"
+        :key="'war' + index">
+        <v-row>
+          <v-col cols="12" sm="6" md="4" v-for="movie in group" :key="movie.id">
+            <movie-card :movie="movie"></movie-card>
+          </v-col>
+        </v-row>
+      </v-carousel-item>
+    </v-carousel>
+
     <h1>War Series</h1>
     <v-carousel hide-delimiters>
       <v-carousel-item
