@@ -9,27 +9,15 @@
           Sort Alphabetically {{ alphabeticalSortOrder }}
         </v-btn>
 
-        <v-menu
-  v-model="showCalendar"
-  :close-on-content-click="false"
-  :nudge-right="40"
-  transition="scale-transition"
-  offset-y
-  min-width="auto">
-  <template v-slot:activator="{ on, attrs }">
-    <v-btn color="var(--primary-color)" rounded v-bind="attrs" v-on="on">Choose Year</v-btn>
-  </template>
-  <v-date-picker
-    v-model="selectedYear"
-    @input="sortByYear"
-    :allowed-dates="allowedDates"
-    color="var(--primary-color)"
-    reactive
-    type="year"> <!-- Changed type to 'year' -->
-    <v-spacer></v-spacer>
-    <v-btn text color="var(--primary-color)" @click="clearDate">Clear</v-btn>
-  </v-date-picker>
-</v-menu>
+        <v-menu v-model="showCalendar" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="var(--primary-color)" rounded v-bind="attrs" v-on="on">Choose Year</v-btn>
+          </template>
+          <v-date-picker v-model="selectedYear" @input="sortByYear" :allowed-dates="allowedDates" color="var(--primary-color)" reactive type="year">
+            <v-spacer></v-spacer>
+            <v-btn text color="var(--primary-color)" @click="clearDate">Clear</v-btn>
+          </v-date-picker>
+        </v-menu>
       </v-col>
     </v-row>
 
@@ -138,7 +126,7 @@ export default {
       this.loading = true;
       try {
         const response = await axios.get(queryURL);
-        this.displayedSeries = response.data.results.filter((series) => series.vote_average > 0);
+        this.displayedSeries = response.data.results;
       } catch (error) {
         console.error("Error fetching series:", error);
       } finally {
@@ -152,10 +140,8 @@ export default {
     },
     sortSeries() {
       if (this.sortType === "alpha") {
-        this.displayedSeries.sort((a, b) =>
-          this.isFlipped
-            ? b.name.localeCompare(a.name)
-            : a.name.localeCompare(b.name)
+        this.displayedSeries.sort((a, b) => 
+          this.isFlipped ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)
         );
       }
     },
@@ -178,6 +164,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
   .series-card {
