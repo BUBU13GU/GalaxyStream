@@ -1,6 +1,17 @@
 <template>
   <v-container>
-    <h1>Watch {{ movieTitle }}</h1>
+    <div class="title-switch-container">
+      <h1>Watch: {{ movieTitle }}</h1>
+      <!-- Player Button -->
+      <div class="player-switch">
+        <v-btn
+          :color="useAlternativePlayer ? 'var(--primary-color)' : 'var(--primary-color-dark)'"
+          @click="switchPlayer"
+          small>
+          {{ useAlternativePlayer ? "Alternative Player" : "Default Player" }}
+        </v-btn>
+      </div>
+    </div>
     <div v-if="movieLoaded">
       <iframe
         :src="videoUrl"
@@ -11,9 +22,8 @@
         allowfullscreen></iframe>
     </div>
     <div v-else>Loading...</div>
-    <v-btn color="primary" @click="switchPlayer">Switch Player</v-btn>
     <!-- Similar Movies Carousel -->
-    <h2 v-if="similarMovies.length > 0">Similar Movies</h2>
+    <h1 v-if="similarMovies.length > 0">Similar Movies</h1>
     <v-carousel hide-delimiters v-if="similarMovies.length > 0">
       <v-carousel-item
         v-for="(group, index) in chunkedSimilarMovies"
@@ -159,5 +169,10 @@
 
   .movie-card:hover .movie-poster {
     filter: blur(2px);
+  }
+  .title-switch-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>

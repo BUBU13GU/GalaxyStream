@@ -1,25 +1,19 @@
 <template>
   <v-container>
-    <!-- Series Title with Dropdown Icon -->
-    <div class="title-container" @click="toggleSeasonDropdown">
+    <!-- Series Title and Player Switch -->
+    <div class="title-switch-container">
       <h1>Watch: {{ seriesTitle }} Season {{ seasonNumber }}</h1>
-      <v-icon color="var(--primary-color)" dark>mdi-chevron-down</v-icon>
-      <!-- Dropdown icon -->
+      <!-- Player Button -->
+      <div class="player-switch">
+        <v-btn
+          :color="useAlternativePlayer ? 'var(--primary-color)' : 'var(--primary-color-dark)'"
+          @click="togglePlayer"
+          small>
+          {{ useAlternativePlayer ? "Alternative Player" : "Default Player" }}
+        </v-btn>
+      </div>
     </div>
-
-    <!-- Seasons Dropdown -->
-    <div v-if="showSeasonDropdown" class="seasons-dropdown">
-      <v-btn
-        v-for="season in totalSeasons"
-        :key="season"
-        color="var(--primary-color)"
-        dark
-        @click="changeSeason(season)"
-        rounded>
-        Season {{ season }}
-      </v-btn>
-    </div>
-
+    <!-- Video Player -->
     <iframe
       v-if="currentEpisode"
       :src="embedUrl"
@@ -29,31 +23,38 @@
       overflow-y="hidden"
       allowfullscreen></iframe>
     <div v-else>Loading...</div>
-     <!-- Add this inside your <v-container> -->
-  <v-btn color="primary" @click="switchPlayer"> Switch Player </v-btn>
-    <!-- Episode Title with Dropdown Icon -->
-    <div
-      v-if="currentEpisode"
-      class="episode-title-container"
-      @click="toggleEpisodeDropdown">
-      <h1>
-        Episode {{ currentEpisode.episode_number }}: {{ currentEpisode.name }}
-      </h1>
-      <v-icon color="var(--primary-color)" dark>mdi-chevron-down</v-icon>
-      <!-- Dropdown icon -->
-    </div>
 
-    <!-- Episodes Dropdown -->
-    <div v-if="showEpisodeDropdown" class="episodes-dropdown">
-      <v-btn
-        v-for="episode in episodes"
-        :key="episode.id"
-        color="var(--primary-color)"
-        dark
-        @click="setCurrentEpisode(episode)"
-        rounded>
-        Episode {{ episode.episode_number }}
-      </v-btn>
+    <!-- Dropdown for Seasons and Episodes -->
+    <div class="dropdown-container">
+      <v-btn color="var(--primary-color-dark)"  rounded dark @click="toggleDropdown"
+        >Select Season/Episode</v-btn
+      >
+      <div v-if="showDropdown">
+        <!-- Seasons Dropdown -->
+        <div class="seasons-dropdown">
+          <v-btn
+            v-for="season in totalSeasons"
+            :key="season"
+            color="var(--primary-color)"
+            dark
+            @click="changeSeason(season)"
+            rounded>
+            Season {{ season }}
+          </v-btn>
+        </div>
+        <!-- Episodes Dropdown -->
+        <div v-if="seasonNumber" class="episodes-dropdown">
+          <v-btn
+            v-for="episode in episodes"
+            :key="episode.id"
+            color="var(--secondary-color)"
+            dark
+            @click="setCurrentEpisode(episode)"
+            rounded>
+            Episode {{ episode.episode_number }}: {{ episode.name }}
+          </v-btn>
+        </div>
+      </div>
     </div>
 
     <!-- Similar Series Carousel -->
@@ -97,9 +98,7 @@
         currentEpisode: null,
         similarSeries: [],
         screenWidth: window.innerWidth,
-        nextEpisodeSelected: false,
-        showSeasonDropdown: false,
-        showEpisodeDropdown: false,
+        showDropdown: false,
         useAlternativePlayer: false,
         totalSeasons: [],
       };
@@ -122,10 +121,11 @@
       await this.fetchSeriesTitle();
       await this.fetchSeasonEpisodes();
       await this.fetchSimilarSeries();
+      await this.fetchTotalSeasons();
       window.addEventListener("resize", this.handleResize);
     },
     beforeDestroy() {
-      window.removeEventListener("resize", this.handleResize); // Remove event listener on component destroy
+      window.removeEventListener("resize", this.handleResize);
     },
     methods: {
       async fetchSeriesTitle() {
@@ -144,7 +144,9 @@
             `https://api.themoviedb.org/3/tv/${this.tmdbId}/season/${this.seasonNumber}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
           );
           this.episodes = response.data.episodes;
-          this.setCurrentEpisode(this.episodes[0]);
+          if (this.episodes.length > 0) {
+            this.setCurrentEpisode(this.episodes[0]);
+          }
         } catch (error) {
           console.error("Error fetching season episodes:", error);
         }
@@ -152,8 +154,11 @@
       setCurrentEpisode(episode) {
         this.currentEpisode = episode;
       },
-      toggleEpisodeDropdown() {
-        this.showEpisodeDropdown = !this.showEpisodeDropdown;
+      togglePlayer() {
+      this.useAlternativePlayer = !this.useAlternativePlayer;
+    },
+      toggleDropdown() {
+        this.showDropdown = !this.showDropdown;
       },
       async fetchSimilarSeries() {
         try {
@@ -164,15 +169,6 @@
         } catch (error) {
           console.error("Error fetching similar series:", error);
         }
-      },
-      setCurrentEpisode(episode) {
-        this.currentEpisode = episode;
-        this.nextEpisodeSelected = true; // Update when a new episode is selected
-      },
-
-      // Method to reset the nextEpisodeSelected when the current episode ends
-      episodeEnded() {
-        this.nextEpisodeSelected = false;
       },
       chunkArray(array, size) {
         let result = [];
@@ -188,12 +184,6 @@
         if (this.screenWidth > 1024) return 3;
         else if (this.screenWidth > 600) return 2;
         return 1;
-      },
-      toggleSeasonDropdown() {
-        this.showSeasonDropdown = !this.showSeasonDropdown;
-        if (this.showSeasonDropdown) {
-          this.fetchTotalSeasons();
-        }
       },
       switchPlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
@@ -213,7 +203,7 @@
       changeSeason(season) {
         this.seasonNumber = season;
         this.fetchSeasonEpisodes();
-        this.showSeasonDropdown = false;
+        this.showDropdown = false;
       },
     },
   };
@@ -316,5 +306,10 @@
   .episodes-dropdown .v-btn {
     margin-right: 5px;
     margin-bottom: 5px;
+  }
+  .title-switch-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>
