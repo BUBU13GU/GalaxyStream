@@ -139,7 +139,7 @@
     if (this.useAlternativePlayer) {
       this.videoUrl = `https://www.2embed.cc/embed/${imdbId}`;
     } else {
-      this.videoUrl = `https://multiembed.mov/directstream.php?video_id=${imdbId}`;
+      this.videoUrl = `https://multiembed.mov/directstream.php?video_id=${this.tmdbId}&tmdb=1`;
     }
     this.movieLoaded = true;
   },

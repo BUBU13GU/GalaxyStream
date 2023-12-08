@@ -115,7 +115,7 @@
           return `https://www.2embed.cc/embedtvfull/${this.imdbId}`;
         } else {
           const baseUrl = "https://multiembed.mov/directstream.php";
-          return `${baseUrl}?video_id=${this.imdbId}&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}`;
+          return `${baseUrl}?video_id=${this.tmdbId}&tmdb=1&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}`;
         }
       },
       chunkedSimilarSeries() {
