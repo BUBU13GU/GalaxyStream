@@ -99,6 +99,7 @@
         seasonNumber: this.$route.params.season,
         seriesTitle: "",
         episodes: [],
+        imdbId: '',
         currentEpisode: null,
         similarSeries: [],
         screenWidth: window.innerWidth,
@@ -107,14 +108,14 @@
         totalSeasons: [],
       };
     },
-    computed: {
+      computed: {
       embedUrl() {
         if (!this.currentEpisode) return "";
         if (this.useAlternativePlayer) {
-          return `https://www.2embed.cc/embedtvfull/${this.tmdbId}`;
+          return `https://www.2embed.cc/embedtvfull/${this.imdbId}`;
         } else {
           const baseUrl = "https://multiembed.mov/directstream.php";
-          return `${baseUrl}?video_id=${this.tmdbId}&tmdb=1&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}`;
+          return `${baseUrl}?video_id=${this.imdbId}&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}`;
         }
       },
       chunkedSimilarSeries() {
@@ -122,6 +123,7 @@
       },
     },
     async created() {
+      await this.fetchImdbId();
       await this.fetchSeriesTitle();
       await this.fetchSeasonEpisodes();
       await this.fetchSimilarSeries();
@@ -153,6 +155,16 @@
           }
         } catch (error) {
           console.error("Error fetching season episodes:", error);
+        }
+      },
+      async fetchImdbId() {
+        try {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/tv/${this.tmdbId}/external_ids?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+          );
+          this.imdbId = response.data.imdb_id;
+        } catch (error) {
+          console.error("Error fetching IMDb ID:", error);
         }
       },
       setCurrentEpisode(episode) {

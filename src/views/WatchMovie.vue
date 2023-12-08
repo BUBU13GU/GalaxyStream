@@ -116,14 +116,33 @@
           console.error("Error fetching movie details:", error);
         }
       },
-      embedMovie() {
-        if (this.useAlternativePlayer) {
-          this.videoUrl = `https://www.2embed.cc/embed/${this.movieId}`;
-        } else {
-          this.videoUrl = `https://multiembed.mov/directstream.php?video_id=${this.movieId}&tmdb=1`;
-        }
-        this.movieLoaded = true;
-      },
+      async fetchImdbId(tmdbId) {
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/movie/${tmdbId}/external_ids?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+      );
+      return response.data.imdb_id;
+    } catch (error) {
+      console.error("Error fetching IMDb ID:", error);
+      return null;
+    }
+  },
+
+  // Updated embedMovie method
+  async embedMovie() {
+    const imdbId = await this.fetchImdbId(this.movieId);
+    if (!imdbId) {
+      console.error("Failed to retrieve IMDb ID");
+      return;
+    }
+
+    if (this.useAlternativePlayer) {
+      this.videoUrl = `https://www.2embed.cc/embed/${imdbId}`;
+    } else {
+      this.videoUrl = `https://multiembed.mov/directstream.php?video_id=${imdbId}`;
+    }
+    this.movieLoaded = true;
+  },
 
       switchPlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
