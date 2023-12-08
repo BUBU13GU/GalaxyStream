@@ -2,7 +2,11 @@
   <v-container>
     <!-- Series Title and Player Switch -->
     <div class="title-switch-container">
-      <h1>Watch: {{ seriesTitle }} Season {{ seasonNumber }}</h1>
+      <h1>
+        Watch: {{ seriesTitle }} Season {{ seasonNumber }} 
+        - Episode {{ currentEpisode ? currentEpisode.episode_number : '' }}: 
+        {{ currentEpisode ? currentEpisode.name : 'Loading...' }}
+      </h1>
       <!-- Player Button -->
       <div class="player-switch">
         <v-btn

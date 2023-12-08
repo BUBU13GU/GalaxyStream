@@ -5,7 +5,11 @@
       <!-- Player Button -->
       <div class="player-switch">
         <v-btn
-          :color="useAlternativePlayer ? 'var(--primary-color)' : 'var(--primary-color-dark)'"
+          :color="
+            useAlternativePlayer
+              ? 'var(--primary-color)'
+              : 'var(--primary-color-dark)'
+          "
           @click="switchPlayer"
           small>
           {{ useAlternativePlayer ? "Alternative Player" : "Default Player" }}
@@ -22,6 +26,26 @@
         allowfullscreen></iframe>
     </div>
     <div v-else>Loading...</div>
+   <!-- Dropdown for Franchise Movies -->
+  <div class="dropdown-container">
+    <v-btn color="var(--primary-color-dark)" rounded dark @click="toggleFranchiseDropdown">
+      Select Franchise Movie
+    </v-btn>
+    <div v-if="showFranchiseDropdown">
+      <!-- Franchise Movies Dropdown -->
+      <div class="franchise-dropdown">
+        <v-btn
+          v-for="(movie, index) in franchiseMovies"
+          :key="movie.id"
+          color="var(--secondary-color)"
+          dark
+          @click="loadMovie(movie.id)"
+          rounded>
+          Franchise Movie {{ index + 1 }}: {{ movie.title }}
+        </v-btn>
+      </div>
+    </div>
+  </div>
     <!-- Similar Movies Carousel -->
     <h1 v-if="similarMovies.length > 0">Similar Movies</h1>
     <v-carousel hide-delimiters v-if="similarMovies.length > 0">
@@ -54,6 +78,8 @@
         movieLoaded: false,
         videoUrl: "",
         similarMovies: [],
+        franchiseMovies: [],
+        showFranchiseDropdown: false,
         useAlternativePlayer: false,
         screenWidth: window.innerWidth,
       };
@@ -69,6 +95,7 @@
       await this.fetchMovieDetails();
       this.embedMovie();
       await this.fetchSimilarMovies();
+      await this.fetchFranchiseMovies();
     },
     beforeDestroy() {
       window.removeEventListener("resize", this.handleResize);
@@ -84,7 +111,7 @@
           const response = await axios.get(
             `https://api.themoviedb.org/3/movie/${this.movieId}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
           );
-          this.movieTitle = response.data.title;
+          this.movieTitle = response.data.title; // Update the movie title here
         } catch (error) {
           console.error("Error fetching movie details:", error);
         }
@@ -101,6 +128,34 @@
       switchPlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
         this.embedMovie();
+      },
+      toggleFranchiseDropdown() {
+      this.showFranchiseDropdown = !this.showFranchiseDropdown;
+    },
+      async fetchFranchiseMovies() {
+        try {
+          const movieDetailsResponse = await axios.get(
+            `https://api.themoviedb.org/3/movie/${this.movieId}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+          );
+          if (movieDetailsResponse.data.belongs_to_collection) {
+            const collectionId =
+              movieDetailsResponse.data.belongs_to_collection.id;
+            const collectionResponse = await axios.get(
+              `https://api.themoviedb.org/3/collection/${collectionId}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+            );
+            this.franchiseMovies = collectionResponse.data.parts;
+          }
+        } catch (error) {
+          console.error("Error fetching franchise movies:", error);
+        }
+      },
+      loadMovie(movieId) {
+        // Logic to load the selected movie
+        this.movieId = movieId;
+        this.embedMovie();
+        this.fetchMovieDetails();
+        this.fetchSimilarMovies();
+        this.fetchFranchiseMovies();
       },
       async fetchSimilarMovies() {
         try {
@@ -174,5 +229,30 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .franchise-movies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .franchise-movies .v-btn {
+    margin: 5px;
+  }
+  .dropdown-container {
+    margin-top: 20px;
+    text-align: left;
+  }
+
+  .franchise-dropdown {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .franchise-dropdown .v-btn {
+    margin: 5px;
   }
 </style>

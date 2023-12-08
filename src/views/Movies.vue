@@ -8,6 +8,7 @@
         <v-btn
           color="var(--primary-color)"
           rounded
+          dark
           @click="toggleAlphabeticalSort">
           Sort Alphabetically {{ alphabeticalSortOrder }}
         </v-btn>
@@ -20,7 +21,7 @@
           offset-y
           min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="var(--primary-color)" rounded v-bind="attrs" v-on="on"
+            <v-btn color="var(--primary-color)" dark rounded v-bind="attrs" v-on="on"
               >Choose Year</v-btn
             >
           </template>

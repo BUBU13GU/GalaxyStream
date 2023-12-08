@@ -41,6 +41,7 @@
           <v-btn
             color="var(--primary-color)"
             rounded
+            dark
             @click="goToWatchMoviePage"
             >Watch Movie</v-btn
           >
