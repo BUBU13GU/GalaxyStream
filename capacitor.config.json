@@ -1,6 +1,6 @@
 {
   "appId": "movie.stream",
-  "appName": "movie-stream",
+  "appName": "GALAXY STREAM",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"
