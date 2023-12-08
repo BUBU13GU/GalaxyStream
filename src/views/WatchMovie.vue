@@ -11,7 +11,7 @@
         allowfullscreen></iframe>
     </div>
     <div v-else>Loading...</div>
-
+    <v-btn color="primary" @click="switchPlayer">Switch Player</v-btn>
     <!-- Similar Movies Carousel -->
     <h2 v-if="similarMovies.length > 0">Similar Movies</h2>
     <v-carousel hide-delimiters v-if="similarMovies.length > 0">
@@ -44,6 +44,7 @@
         movieLoaded: false,
         videoUrl: "",
         similarMovies: [],
+        useAlternativePlayer: false,
         screenWidth: window.innerWidth,
       };
     },
@@ -79,8 +80,17 @@
         }
       },
       embedMovie() {
-        this.videoUrl = `https://multiembed.mov/directstream.php?video_id=${this.movieId}&tmdb=1`;
+        if (this.useAlternativePlayer) {
+          this.videoUrl = `https://www.2embed.cc/embed/${this.movieId}`;
+        } else {
+          this.videoUrl = `https://multiembed.mov/directstream.php?video_id=${this.movieId}&tmdb=1`;
+        }
         this.movieLoaded = true;
+      },
+
+      switchPlayer() {
+        this.useAlternativePlayer = !this.useAlternativePlayer;
+        this.embedMovie();
       },
       async fetchSimilarMovies() {
         try {

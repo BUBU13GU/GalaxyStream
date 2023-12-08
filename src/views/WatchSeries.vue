@@ -3,7 +3,7 @@
     <!-- Series Title with Dropdown Icon -->
     <div class="title-container" @click="toggleSeasonDropdown">
       <h1>Watch: {{ seriesTitle }} Season {{ seasonNumber }}</h1>
-      <v-icon color="var(--primary-color)"  dark >mdi-chevron-down</v-icon>
+      <v-icon color="var(--primary-color)" dark>mdi-chevron-down</v-icon>
       <!-- Dropdown icon -->
     </div>
 
@@ -12,7 +12,8 @@
       <v-btn
         v-for="season in totalSeasons"
         :key="season"
-        color="var(--primary-color)"  dark 
+        color="var(--primary-color)"
+        dark
         @click="changeSeason(season)"
         rounded>
         Season {{ season }}
@@ -28,6 +29,8 @@
       overflow-y="hidden"
       allowfullscreen></iframe>
     <div v-else>Loading...</div>
+     <!-- Add this inside your <v-container> -->
+  <v-btn color="primary" @click="switchPlayer"> Switch Player </v-btn>
     <!-- Episode Title with Dropdown Icon -->
     <div
       v-if="currentEpisode"
@@ -36,7 +39,7 @@
       <h1>
         Episode {{ currentEpisode.episode_number }}: {{ currentEpisode.name }}
       </h1>
-      <v-icon color="var(--primary-color)"   dark >mdi-chevron-down</v-icon>
+      <v-icon color="var(--primary-color)" dark>mdi-chevron-down</v-icon>
       <!-- Dropdown icon -->
     </div>
 
@@ -45,7 +48,8 @@
       <v-btn
         v-for="episode in episodes"
         :key="episode.id"
-        color="var(--primary-color)"  dark 
+        color="var(--primary-color)"
+        dark
         @click="setCurrentEpisode(episode)"
         rounded>
         Episode {{ episode.episode_number }}
@@ -96,14 +100,19 @@
         nextEpisodeSelected: false,
         showSeasonDropdown: false,
         showEpisodeDropdown: false,
+        useAlternativePlayer: false,
         totalSeasons: [],
       };
     },
     computed: {
       embedUrl() {
         if (!this.currentEpisode) return "";
-        const baseUrl = "https://multiembed.mov/directstream.php";
-        return `${baseUrl}?video_id=${this.tmdbId}&tmdb=1&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}`;
+        if (this.useAlternativePlayer) {
+          return `https://www.2embed.cc/embedtvfull/${this.tmdbId}`;
+        } else {
+          const baseUrl = "https://multiembed.mov/directstream.php";
+          return `${baseUrl}?video_id=${this.tmdbId}&tmdb=1&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}`;
+        }
       },
       chunkedSimilarSeries() {
         return this.chunkArray(this.similarSeries, this.computeColumns());
@@ -186,7 +195,9 @@
           this.fetchTotalSeasons();
         }
       },
-
+      switchPlayer() {
+        this.useAlternativePlayer = !this.useAlternativePlayer;
+      },
       async fetchTotalSeasons() {
         try {
           const response = await axios.get(
@@ -199,7 +210,6 @@
           console.error("Error fetching total seasons:", error);
         }
       },
-
       changeSeason(season) {
         this.seasonNumber = season;
         this.fetchSeasonEpisodes();
