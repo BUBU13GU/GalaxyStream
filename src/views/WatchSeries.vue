@@ -3,14 +3,18 @@
     <!-- Series Title and Player Switch -->
     <div class="title-switch-container">
       <h1>
-        Watch: {{ seriesTitle }} Season {{ seasonNumber }} 
-        - Episode {{ currentEpisode ? currentEpisode.episode_number : '' }}: 
-        {{ currentEpisode ? currentEpisode.name : 'Loading...' }}
+        Watch: {{ seriesTitle }} Season {{ seasonNumber }} - Episode
+        {{ currentEpisode ? currentEpisode.episode_number : "" }}:
+        {{ currentEpisode ? currentEpisode.name : "Loading..." }}
       </h1>
       <!-- Player Button -->
       <div class="player-switch">
         <v-btn
-          :color="useAlternativePlayer ? 'var(--primary-color)' : 'var(--primary-color-dark)'"
+          :color="
+            useAlternativePlayer
+              ? 'var(--primary-color)'
+              : 'var(--primary-color-dark)'
+          "
           @click="togglePlayer"
           small>
           {{ useAlternativePlayer ? "Alternative Player" : "Default Player" }}
@@ -30,7 +34,11 @@
 
     <!-- Dropdown for Seasons and Episodes -->
     <div class="dropdown-container">
-      <v-btn color="var(--primary-color-dark)"  rounded dark @click="toggleDropdown"
+      <v-btn
+        color="var(--primary-color-dark)"
+        rounded
+        dark
+        @click="toggleDropdown"
         >Select Season/Episode</v-btn
       >
       <div v-if="showDropdown">
@@ -99,7 +107,7 @@
         seasonNumber: this.$route.params.season,
         seriesTitle: "",
         episodes: [],
-        imdbId: '',
+        imdbId: "",
         currentEpisode: null,
         similarSeries: [],
         screenWidth: window.innerWidth,
@@ -108,7 +116,7 @@
         totalSeasons: [],
       };
     },
-      computed: {
+    computed: {
       embedUrl() {
         if (!this.currentEpisode) return "";
         if (this.useAlternativePlayer) {
@@ -118,9 +126,13 @@
           return `${baseUrl}?video_id=${this.tmdbId}&tmdb=1&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}`;
         }
       },
+
       chunkedSimilarSeries() {
         return this.chunkArray(this.similarSeries, this.computeColumns());
       },
+    },
+    mounted() {
+      window.addEventListener("resize", this.handleResize);
     },
     async created() {
       await this.fetchImdbId();
@@ -171,8 +183,8 @@
         this.currentEpisode = episode;
       },
       togglePlayer() {
-      this.useAlternativePlayer = !this.useAlternativePlayer;
-    },
+        this.useAlternativePlayer = !this.useAlternativePlayer;
+      },
       toggleDropdown() {
         this.showDropdown = !this.showDropdown;
       },
@@ -215,6 +227,14 @@
         } catch (error) {
           console.error("Error fetching total seasons:", error);
         }
+      },
+      computeColumns() {
+        if (this.screenWidth > 1024) return 3;
+        else if (this.screenWidth > 600) return 2;
+        return 1;
+      },
+      handleResize() {
+        this.screenWidth = window.innerWidth;
       },
       changeSeason(season) {
         this.seasonNumber = season;
