@@ -28,6 +28,19 @@
       ">
       No results found.
     </p>
+    <!-- Scroll to Top Button -->
+    <v-btn
+      fab
+      dark
+      fixed
+      bottom
+      right
+      color="var(--primary-color)"
+      v-show="showScrollButton"
+      @click="scrollTop"
+      class="elevation-12">
+      <v-icon>mdi-chevron-up</v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -45,6 +58,7 @@
       return {
         movieSearchResults: [],
         seriesSearchResults: [],
+        showScrollButton: false,
         query: "",
       };
     },
@@ -57,6 +71,12 @@
         },
       },
     },
+    mounted() {
+      window.addEventListener("scroll", this.handleScroll);
+    },
+    beforeDestroy() {
+      window.removeEventListener("scroll", this.handleScroll);
+    },
     methods: {
       async fetchSearchResults() {
         if (this.query) {
@@ -67,7 +87,9 @@
                 process.env.VUE_APP_TMDB_API_KEY
               }&query=${encodeURIComponent(this.query)}`
             );
-            this.movieSearchResults = this.filterResults(movieResponse.data.results);
+            this.movieSearchResults = this.filterResults(
+              movieResponse.data.results
+            );
 
             // Fetch series
             const seriesResponse = await axios.get(
@@ -75,7 +97,9 @@
                 process.env.VUE_APP_TMDB_API_KEY
               }&query=${encodeURIComponent(this.query)}`
             );
-            this.seriesSearchResults = this.filterResults(seriesResponse.data.results);
+            this.seriesSearchResults = this.filterResults(
+              seriesResponse.data.results
+            );
           } catch (error) {
             console.error("Error fetching search results:", error);
           }
@@ -85,9 +109,15 @@
           this.seriesSearchResults = [];
         }
       },
+      handleScroll() {
+        console.log("Scrolling...", window.scrollY); // This should log the scroll position
+        this.showScrollButton = window.scrollY > 200;
+      },
+      scrollTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      },
       filterResults(results) {
-        // Filter out items with a score of 0
-        return results.filter(item => item.vote_average > 0);
+        return results.filter((item) => item.vote_average > 0);
       },
     },
   };
@@ -95,15 +125,15 @@
 
 <style scoped>
   .movie-card {
-    max-width: 325px; /* Adjust as needed */
+    max-width: 325px;
     height: auto;
-    overflow: hidden; /* Ensure the overlay fits within the card */
+    overflow: hidden;
     margin-left: 6%;
   }
   .series-card {
-    max-width: 325px; /* Adjust as needed */
+    max-width: 325px;
     height: auto;
-    overflow: hidden; /* Ensure the overlay fits within the card */
+    overflow: hidden;
     margin-left: 6%;
   }
 </style>

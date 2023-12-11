@@ -61,6 +61,7 @@ export default {
       currentPage: 1,
       loading: false,
       seriesPerPage: 20,
+      calendarSearchActive: false,
       showScrollButton: false,
       showCalendar: false,
       selectedYear: null,
@@ -74,6 +75,7 @@ export default {
   methods: {
     async fetchSeriesPage() {
       if (this.currentPage > this.totalPages && this.totalPages !== 0) return;
+      if (this.calendarSearchActive) return;
 
       this.loading = true;
       try {
@@ -92,14 +94,19 @@ export default {
     },
     updateDisplayedSeries() {
       this.displayedSeries = this.allSeries
-        .filter((series) => series.vote_average > 0)
-        .slice(0, this.currentPage * this.seriesPerPage);
+    .filter((series) => series.vote_average > 0)
+    .slice(0, this.currentPage * this.seriesPerPage);
+
 
       this.sortSeries();
     },
     loadMoreSeries() {
-      this.fetchSeriesPage();
-    },
+  if (this.calendarSearchActive) {
+    // Logic to load more series based on the calendar search
+  } else {
+    this.fetchSeriesPage();
+  }
+},
     toggleAlphabeticalSort() {
       this.isFlipped = !this.isFlipped;
       this.alphabeticalSortOrder = this.isFlipped ? "Z-A" : "A-Z";
@@ -107,6 +114,7 @@ export default {
     },
     async sortByYear() {
       if (!this.selectedYear) return;
+      this.calendarSearchActive = true;
 
       const selectedDate = new Date(this.selectedYear);
       const year = selectedDate.getFullYear();
@@ -136,6 +144,7 @@ export default {
     clearDate() {
       this.selectedYear = null;
       this.showCalendar = false;
+      this.calendarSearchActive = false;
       this.fetchSeriesPage();
     },
     sortSeries() {

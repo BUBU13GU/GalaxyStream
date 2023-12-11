@@ -21,7 +21,12 @@
           offset-y
           min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="var(--primary-color)" dark rounded v-bind="attrs" v-on="on"
+            <v-btn
+              color="var(--primary-color)"
+              dark
+              rounded
+              v-bind="attrs"
+              v-on="on"
               >Choose Year</v-btn
             >
           </template>
@@ -106,6 +111,7 @@
         moviesPerPage: 20,
         showScrollButton: false,
         showCalendar: false,
+        calendarSearchActive: false,
         selectedYear: null,
         minYear: 1900,
         maxYear: new Date().getFullYear(),
@@ -116,6 +122,7 @@
     },
     methods: {
       async fetchMoviesPage() {
+        if (this.calendarSearchActive) return;
         if (this.currentPage > this.totalPages && this.totalPages !== 0) return;
 
         this.loading = true;
@@ -135,15 +142,20 @@
       },
       updateDisplayedMovies() {
         // Filter out movies with a vote_average of 0 and then slice for pagination
-        this.displayedMovies = this.allMovies
-          .filter((movie) => movie.vote_average > 0)
-          .slice(0, this.currentPage * this.moviesPerPage);
+        this.displayedMovies = this.filterResults(this.allMovies).slice(
+          0,
+          this.currentPage * this.moviesPerPage
+        );
 
         // Apply sorting if needed
         this.sortMovies();
       },
       loadMoreMovies() {
-        this.fetchMoviesPage();
+        if (this.calendarSearchActive) {
+          // Logic to load more movies based on the calendar search
+        } else {
+          this.fetchMoviesPage();
+        }
       },
       toggleAlphabeticalSort() {
         this.isFlipped = !this.isFlipped;
@@ -152,7 +164,7 @@
       },
       async sortByYear() {
         if (!this.selectedYear) return;
-
+        this.calendarSearchActive = true;
         const selectedDate = new Date(this.selectedYear);
         const year = selectedDate.getFullYear();
         const month = selectedDate.getMonth() + 1;
@@ -178,9 +190,13 @@
           this.loading = false;
         }
       },
+      filterResults(results) {
+        return results.filter((item) => item.vote_average > 0);
+      },
       clearDate() {
         this.selectedYear = null;
         this.showCalendar = false;
+        this.calendarSearchActive = false;
         this.fetchMoviesPage();
       },
       sortMovies() {
