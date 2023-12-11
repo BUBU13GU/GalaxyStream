@@ -26,26 +26,30 @@
         allowfullscreen></iframe>
     </div>
     <div v-else>Loading...</div>
-   <!-- Dropdown for Franchise Movies -->
-  <div class="dropdown-container">
-    <v-btn color="var(--primary-color-dark)" rounded dark @click="toggleFranchiseDropdown">
-      Select Franchise Movie
-    </v-btn>
-    <div v-if="showFranchiseDropdown">
-      <!-- Franchise Movies Dropdown -->
-      <div class="franchise-dropdown">
-        <v-btn
-          v-for="(movie, index) in franchiseMovies"
-          :key="movie.id"
-          color="var(--secondary-color)"
-          dark
-          @click="loadMovie(movie.id)"
-          rounded>
-          Franchise Movie {{ index + 1 }}: {{ movie.title }}
-        </v-btn>
+    <!-- Dropdown for Franchise Movies -->
+    <div class="dropdown-container">
+      <v-btn
+        color="var(--primary-color-dark)"
+        rounded
+        dark
+        @click="toggleFranchiseDropdown">
+        Select Movie
+      </v-btn>
+      <div v-if="showFranchiseDropdown">
+        <!-- Franchise Movies Dropdown -->
+        <div class="franchise-dropdown">
+          <v-btn
+            v-for="(movie, index) in franchiseMovies"
+            :key="movie.id"
+            color="var(--secondary-color)"
+            dark
+            @click="loadMovie(movie.id)"
+            rounded>
+            Movie {{ index + 1 }}: {{ movie.title }}
+          </v-btn>
+        </div>
       </div>
     </div>
-  </div>
     <!-- Similar Movies Carousel -->
     <h1 v-if="similarMovies.length > 0">Similar Movies</h1>
     <v-carousel hide-delimiters v-if="similarMovies.length > 0">
@@ -100,11 +104,22 @@
     beforeDestroy() {
       window.removeEventListener("resize", this.handleResize);
     },
+    mounted() {
+      window.addEventListener("resize", this.handleResize);
+      this.handleResize(); // Call it once initially to set screenWidth
+    },
+
+    beforeDestroy() {
+      window.removeEventListener("resize", this.handleResize);
+    },
     methods: {
       computeColumns() {
         if (this.screenWidth > 1024) return 3;
         else if (this.screenWidth > 600) return 2;
         return 1;
+      },
+      handleResize() {
+        this.screenWidth = window.innerWidth;
       },
       async fetchMovieDetails() {
         try {
@@ -117,40 +132,40 @@
         }
       },
       async fetchImdbId(tmdbId) {
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/${tmdbId}/external_ids?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
-      );
-      return response.data.imdb_id;
-    } catch (error) {
-      console.error("Error fetching IMDb ID:", error);
-      return null;
-    }
-  },
+        try {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/${tmdbId}/external_ids?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
+          );
+          return response.data.imdb_id;
+        } catch (error) {
+          console.error("Error fetching IMDb ID:", error);
+          return null;
+        }
+      },
 
-  // Updated embedMovie method
-  async embedMovie() {
-    const imdbId = await this.fetchImdbId(this.movieId);
-    if (!imdbId) {
-      console.error("Failed to retrieve IMDb ID");
-      return;
-    }
+      // Updated embedMovie method
+      async embedMovie() {
+        const imdbId = await this.fetchImdbId(this.movieId);
+        if (!imdbId) {
+          console.error("Failed to retrieve IMDb ID");
+          return;
+        }
 
-    if (this.useAlternativePlayer) {
-      this.videoUrl = `https://www.2embed.cc/embed/${imdbId}`;
-    } else {
-      this.videoUrl = `https://multiembed.mov/directstream.php?video_id=${this.movieId}&tmdb=1`;
-    }
-    this.movieLoaded = true;
-  },
+        if (this.useAlternativePlayer) {
+          this.videoUrl = `https://www.2embed.cc/embed/${imdbId}`;
+        } else {
+          this.videoUrl = `https://multiembed.mov/directstream.php?video_id=${this.movieId}&tmdb=1`;
+        }
+        this.movieLoaded = true;
+      },
 
       switchPlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
         this.embedMovie();
       },
       toggleFranchiseDropdown() {
-      this.showFranchiseDropdown = !this.showFranchiseDropdown;
-    },
+        this.showFranchiseDropdown = !this.showFranchiseDropdown;
+      },
       async fetchFranchiseMovies() {
         try {
           const movieDetailsResponse = await axios.get(
