@@ -18,26 +18,26 @@
     <v-navigation-drawer v-model="drawer" app class="drawer" ref="drawer">
       <img src="@/assets/logo.png" alt="Logo" class="drawer-logo" />
       <v-list dense>
-        <v-list-item @click="goToHome" class="drawer-item">
+        <v-list-item @click="goToHome" dark class="drawer-item">
           <v-list-item-icon>
             <v-icon color="var(--primary-color)">mdi-home</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Home</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="goToCategories" class="drawer-item">
+        <v-list-item @click="goToCategories" dark class="drawer-item">
           <v-list-item-icon>
             <v-icon color="var(--primary-color)">mdi-view-list</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Categories</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="goToMovies" class="drawer-item">
+        <v-list-item @click="goToMovies" dark class="drawer-item">
           <v-list-item-icon>
             <v-icon color="var(--primary-color)">mdi-movie</v-icon>
           </v-list-item-icon>
           <v-list-item-title>All Movies</v-list-item-title>
         </v-list-item>
 
-        <v-list-item @click="goToSeries" class="drawer-item">
+        <v-list-item @click="goToSeries"  dark class="drawer-item">
           <v-list-item-icon>
             <v-icon color="var(--primary-color)">mdi-television-classic</v-icon>
           </v-list-item-icon>

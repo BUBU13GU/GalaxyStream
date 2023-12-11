@@ -208,11 +208,6 @@
       handleResize() {
         this.screenWidth = window.innerWidth;
       },
-      computeColumns() {
-        if (this.screenWidth > 1024) return 3;
-        else if (this.screenWidth > 600) return 2;
-        return 1;
-      },
       switchPlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
       },
