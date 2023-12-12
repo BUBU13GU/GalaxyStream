@@ -62,7 +62,7 @@
       };
     },
     mounted() {
-      // Add global click event listener
+
       document.addEventListener("click", this.handleClickOutside);
     },
     beforeDestroy() {
