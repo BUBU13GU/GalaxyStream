@@ -170,22 +170,42 @@
         this.movieLoaded = true;
       },
       async fetchMagnetLink(imdbId) {
-        try {
-          const response = await axios.get(
-            `https://yts.mx/api/v2/list_movies.json?query_term=${imdbId}`
-          );
-          if (
-            response.data &&
-            response.data.data.movies &&
-            response.data.data.movies.length > 0
-          ) {
-            const movieData = response.data.data.movies[0];
-            this.magnetLink = movieData.torrents[0].url; // Use the first torrent's magnet link
-          }
-        } catch (error) {
-          console.error("Error fetching magnet link:", error);
-        }
-      },
+  try {
+    const response = await axios.get(
+      `https://yts.mx/api/v2/list_movies.json?query_term=${imdbId}`
+    );
+    console.log("${imdbId}")
+    if (response.data && response.data.data.movies && response.data.data.movies.length > 0) {
+      const movieData = response.data.data.movies[0];
+      const torrentInfo = movieData.torrents[0]; // Assuming you want the first torrent
+      this.constructMagnetLink(torrentInfo.hash, movieData.title);
+    }
+  } catch (error) {
+    console.error("Error fetching magnet link:", error);
+  }
+},
+constructMagnetLink(torrentHash, movieTitle) {
+  const encodedMovieTitle = encodeURIComponent(movieTitle);
+  const trackers = [
+    'udp://open.demonii.com:1337/announce',
+    'udp://tracker.openbittorrent.com:80',
+    'udp://tracker.coppersurfer.tk:6969',
+    'udp://glotorrents.pw:6969/announce',
+    'udp://tracker.opentrackr.org:1337/announce',
+    'udp://torrent.gresille.org:80/announce',
+    'udp://torrent.gresille.org:80/announce',
+    'udp://p4p.arenabg.com:1337',
+    'udp://tracker.leechers-paradise.org:6969',
+    // ... more trackers ...
+  ];
+
+  let magnetLink = `magnet:?xt=urn:btih:${torrentHash}&dn=${encodedMovieTitle}`;
+  trackers.forEach(tracker => {
+    magnetLink += `&tr=${encodeURIComponent(tracker)}`;
+  });
+
+  this.magnetLink = magnetLink;
+},
       switchPlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
         this.embedMovie();
