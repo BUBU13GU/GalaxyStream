@@ -26,6 +26,16 @@
         allowfullscreen></iframe>
     </div>
     <div v-else>Loading...</div>
+    <v-btn
+      v-if="magnetLink"
+      :href="magnetLink"
+      target="_blank"
+      rel="noopener noreferrer"
+      color="var(--secondary-color)"
+      dark
+      rounded>
+      Download Torrent
+    </v-btn>
     <!-- Dropdown for Franchise Movies -->
     <div class="dropdown-container">
       <v-btn
@@ -81,6 +91,7 @@
         movieTitle: "",
         movieLoaded: false,
         videoUrl: "",
+        magnetLink: "",
         similarMovies: [],
         franchiseMovies: [],
         showFranchiseDropdown: false,
@@ -150,7 +161,7 @@
           console.error("Failed to retrieve IMDb ID");
           return;
         }
-
+        this.fetchMagnetLink(imdbId);
         if (this.useAlternativePlayer) {
           this.videoUrl = `https://www.2embed.cc/embed/${imdbId}`;
         } else {
@@ -158,7 +169,23 @@
         }
         this.movieLoaded = true;
       },
-
+      async fetchMagnetLink(imdbId) {
+        try {
+          const response = await axios.get(
+            `https://yts.mx/api/v2/list_movies.json?query_term=${imdbId}`
+          );
+          if (
+            response.data &&
+            response.data.data.movies &&
+            response.data.data.movies.length > 0
+          ) {
+            const movieData = response.data.data.movies[0];
+            this.magnetLink = movieData.torrents[0].url; // Use the first torrent's magnet link
+          }
+        } catch (error) {
+          console.error("Error fetching magnet link:", error);
+        }
+      },
       switchPlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
         this.embedMovie();

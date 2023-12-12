@@ -31,7 +31,16 @@
       overflow-y="hidden"
       allowfullscreen></iframe>
     <div v-else>Loading...</div>
-
+    <v-btn
+      v-if="magnetLink"
+      :href="magnetLink"
+      target="_blank"
+      rel="noopener noreferrer"
+      color="var(--secondary-color)"
+      dark
+      rounded>
+      Download Torrent
+    </v-btn>
     <!-- Dropdown for Seasons and Episodes -->
     <div class="dropdown-container">
       <v-btn
@@ -107,6 +116,7 @@
         seasonNumber: this.$route.params.season,
         seriesTitle: "",
         episodes: [],
+        torrents: [],
         imdbId: "",
         currentEpisode: null,
         similarSeries: [],
@@ -136,6 +146,7 @@
     },
     async created() {
       await this.fetchImdbId();
+      await this.fetchTorrents();
       await this.fetchSeriesTitle();
       await this.fetchSeasonEpisodes();
       await this.fetchSimilarSeries();
@@ -177,6 +188,26 @@
           this.imdbId = response.data.imdb_id;
         } catch (error) {
           console.error("Error fetching IMDb ID:", error);
+        }
+      },
+      async fetchTorrents() {
+        if (!this.imdbId) {
+          console.error("IMDb ID not available");
+          return;
+        }
+        try {
+          const response = await axios.get(
+            `https://eztvx.to/api/get-torrents?imdb_id=${this.imdbId}`
+          );
+          if (
+            response.data &&
+            response.data.torrents &&
+            response.data.torrents.length > 0
+          ) {
+            this.magnetLink = response.data.torrents[0].magnet_url; // Use the first torrent's magnet link
+          }
+        } catch (error) {
+          console.error("Error fetching torrents:", error);
         }
       },
       setCurrentEpisode(episode) {
