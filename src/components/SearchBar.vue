@@ -40,64 +40,53 @@
         searchSuggestions: [],
         isLoading: false,
         showSuggestions: false,
+        debounceTimer: null,
       };
     },
     methods: {
-      async fetchSuggestions() {
-        if (!this.searchQuery) {
-          this.searchSuggestions = [];
-          this.showSuggestions = false;
-          return;
-        }
+      fetchSuggestions() {
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = setTimeout(async () => {
+          if (!this.searchQuery.trim()) {
+            this.searchSuggestions = [];
+            this.showSuggestions = false;
+            return;
+          }
 
-        this.isLoading = true;
-        try {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/search/multi?api_key=${
-              process.env.VUE_APP_TMDB_API_KEY
-            }&query=${encodeURIComponent(this.searchQuery)}`
-          );
-
-          const normalizedInput = this.searchQuery
-            .toLowerCase()
-            .replace(/\s+/g, "");
-
-          this.searchSuggestions = response.data.results
-            .filter(
-              (item) => item.media_type === "movie" || item.media_type === "tv"
-            )
-            .map((item) => ({
-              name: item.title || item.name,
-              id: item.id,
-            }))
-            .reduce((unique, item) => {
-              const normalizedItemName = item.name
-                .toLowerCase()
-                .replace(/\s+/g, "");
-              if (
-                !unique.some(
-                  (suggestion) =>
-                    suggestion.name.toLowerCase().replace(/\s+/g, "") ===
-                    normalizedItemName
-                )
-              ) {
-                unique.push(item);
-              }
-              return unique;
-            }, [])
-            .filter((item) =>
-              item.name
-                .toLowerCase()
-                .replace(/\s+/g, "")
-                .includes(normalizedInput)
+          this.isLoading = true;
+          try {
+            const response = await axios.get(
+              `https://api.themoviedb.org/3/search/multi?api_key=${
+                process.env.VUE_APP_TMDB_API_KEY
+              }&query=${encodeURIComponent(this.searchQuery)}`
             );
 
-          this.showSuggestions = this.searchSuggestions.length > 0;
-        } catch (error) {
-          console.error("Error fetching suggestions:", error);
-        } finally {
-          this.isLoading = false;
-        }
+            const normalizedInput = this.searchQuery.toLowerCase().replace(/\s+/g, "");
+
+            this.searchSuggestions = response.data.results
+              .filter(
+                (item) => item.media_type === "movie" || item.media_type === "tv"
+              )
+              .map((item) => ({
+                name: item.title || item.name,
+                id: item.id,
+              }))
+              .reduce((unique, item) => {
+                const normalizedItemName = item.name.toLowerCase().replace(/\s+/g, "");
+                if (!unique.some(suggestion => suggestion.name.toLowerCase().replace(/\s+/g, "") === normalizedItemName)) {
+                  unique.push(item);
+                }
+                return unique;
+              }, [])
+              .filter((item) => item.name.toLowerCase().replace(/\s+/g, "").includes(normalizedInput));
+
+            this.showSuggestions = this.searchSuggestions.length > 0;
+          } catch (error) {
+            console.error("Error fetching suggestions:", error);
+          } finally {
+            this.isLoading = false;
+          }
+        }, 300);
       },
       submitSearch() {
         if (this.searchQuery) {
@@ -106,7 +95,6 @@
             query: { q: this.searchQuery },
           });
         } else {
-          // Redirect to the root path when search query is empty
           this.$router.push({ path: "/" });
         }
       },
