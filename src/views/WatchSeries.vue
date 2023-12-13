@@ -212,7 +212,7 @@
         try {
           this.torrents = []; // Reset torrents array
 
-          const totalPages = 20; // Total number of pages you want to fetch
+          const totalPages = 25; // Total number of pages you want to fetch
           for (let page = 1; page <= totalPages; page++) {
             const response = await axios.get(
               `https://eztvx.to/api/get-torrents?imdb_id=${imdbIdWithoutTT}&page=${page}`
