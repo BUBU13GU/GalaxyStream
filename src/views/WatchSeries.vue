@@ -195,9 +195,12 @@
           console.error("IMDb ID not available");
           return;
         }
+        // Remove "tt" from the IMDb ID
+        const imdbIdWithoutTT = this.imdbId.replace("tt", "");
+
         try {
           const response = await axios.get(
-            `https://eztvx.to/api/get-torrents?imdb_id=${this.imdbId}`
+            `https://eztvx.to/api/get-torrents?imdb_id=${imdbIdWithoutTT}`
           );
           if (
             response.data &&
