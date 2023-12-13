@@ -31,16 +31,28 @@
       overflow-y="hidden"
       allowfullscreen></iframe>
     <div v-else>Loading...</div>
-    <v-btn
-      v-if="magnetLink"
-      :href="magnetLink"
-      target="_blank"
-      rel="noopener noreferrer"
-      color="var(--secondary-color)"
-      dark
-      rounded>
-      Download Torrent
-    </v-btn>
+    <div class="dropdown-container">
+      <v-btn
+        color="var(--primary-color-dark)"
+        rounded
+        dark
+        @click="toggleTorrentsDropdown">
+        Select Torrent
+      </v-btn>
+      <div v-if="showTorrentsDropdown">
+        <div class="torrents-dropdown">
+          <v-btn
+            v-for="(torrent, index) in torrents"
+            :key="index"
+            color="var(--secondary-color)"
+            dark
+            rounded
+            @click="openMagnetLink(torrent.magnetLink)">
+            {{ torrent.filename }}
+          </v-btn>
+        </div>
+      </div>
+    </div>
     <!-- Dropdown for Seasons and Episodes -->
     <div class="dropdown-container">
       <v-btn
@@ -117,6 +129,7 @@
         seriesTitle: "",
         episodes: [],
         torrents: [],
+        showTorrentsDropdown: false,
         imdbId: "",
         currentEpisode: null,
         similarSeries: [],
@@ -195,19 +208,25 @@
           console.error("IMDb ID not available");
           return;
         }
-        // Remove "tt" from the IMDb ID
         const imdbIdWithoutTT = this.imdbId.replace("tt", "");
-
         try {
-          const response = await axios.get(
-            `https://eztvx.to/api/get-torrents?imdb_id=${imdbIdWithoutTT}`
-          );
-          if (
-            response.data &&
-            response.data.torrents &&
-            response.data.torrents.length > 0
-          ) {
-            this.magnetLink = response.data.torrents[0].magnet_url; // Use the first torrent's magnet link
+          this.torrents = []; // Reset torrents array
+
+          const totalPages = 100; // Total number of pages you want to fetch
+          for (let page = 1; page <= totalPages; page++) {
+            const response = await axios.get(
+              `https://eztvx.to/api/get-torrents?imdb_id=${imdbIdWithoutTT}&page=${page}`
+            );
+            if (response.data && response.data.torrents) {
+              const filteredTorrents = response.data.torrents
+                .filter((torrent) => torrent.filename.includes("COMPLETE"))
+                .map((torrent) => ({
+                  filename: torrent.filename,
+                  magnetLink: torrent.magnet_url,
+                }));
+
+              this.torrents = this.torrents.concat(filteredTorrents);
+            }
           }
         } catch (error) {
           console.error("Error fetching torrents:", error);
@@ -215,6 +234,9 @@
       },
       setCurrentEpisode(episode) {
         this.currentEpisode = episode;
+      },
+      openMagnetLink(magnetLink) {
+        window.open(magnetLink, "_blank");
       },
       togglePlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
@@ -244,6 +266,9 @@
       },
       switchPlayer() {
         this.useAlternativePlayer = !this.useAlternativePlayer;
+      },
+      toggleTorrentsDropdown() {
+        this.showTorrentsDropdown = !this.showTorrentsDropdown;
       },
       async fetchTotalSeasons() {
         try {
@@ -376,5 +401,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .torrents-dropdown {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 10px;
+  }
+
+  .torrents-dropdown .v-btn {
+    margin-bottom: 5px;
   }
 </style>
