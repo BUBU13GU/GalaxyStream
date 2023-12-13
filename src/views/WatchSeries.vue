@@ -212,14 +212,15 @@
         try {
           this.torrents = []; // Reset torrents array
 
-          const totalPages = 100; // Total number of pages you want to fetch
+          const totalPages = 20; // Total number of pages you want to fetch
           for (let page = 1; page <= totalPages; page++) {
             const response = await axios.get(
               `https://eztvx.to/api/get-torrents?imdb_id=${imdbIdWithoutTT}&page=${page}`
             );
             if (response.data && response.data.torrents) {
+              const seasonRegex = /S\d{2}(?!E\d{2})/; // Regex to match 'Sxx' but not followed by 'Exx'
               const filteredTorrents = response.data.torrents
-                .filter((torrent) => torrent.filename.includes("COMPLETE"))
+                .filter((torrent) => seasonRegex.test(torrent.filename))
                 .map((torrent) => ({
                   filename: torrent.filename,
                   magnetLink: torrent.magnet_url,

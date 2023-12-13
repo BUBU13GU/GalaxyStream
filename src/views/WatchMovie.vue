@@ -28,10 +28,11 @@
     <div v-else>Loading...</div>
     <v-btn
       v-if="magnetLink"
+      class="dropdown-container"
       :href="magnetLink"
       target="_blank"
       rel="noopener noreferrer"
-      color="var(--secondary-color)"
+      color="var(--primary-color-dark)"
       dark
       rounded>
       Download Torrent
