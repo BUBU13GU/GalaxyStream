@@ -164,7 +164,7 @@
         }
         this.fetchMagnetLink(imdbId);
         if (this.useAlternativePlayer) {
-          this.videoUrl = `https://www.2embed.cc/embed/${imdbId}`;
+          this.videoUrl = `https://vidsrc.to/embed/movie/${this.movieId}`;
         } else {
           this.videoUrl = `https://vidsrc.to/embed/movie/${this.movieId}`;
         }
