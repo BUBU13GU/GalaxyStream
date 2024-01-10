@@ -143,10 +143,10 @@
       embedUrl() {
         if (!this.currentEpisode) return "";
         if (this.useAlternativePlayer) {
-          return `https://www.2embed.cc/embedtvfull/${this.imdbId}`;
+          return `https://vidsrc.to/embed/tv/${this.tmdbId}/${this.seasonNumber}`;
         } else {
-          const baseUrl = "https://multiembed.mov/directstream.php";
-          return `${baseUrl}?video_id=${this.tmdbId}&tmdb=1&s=${this.seasonNumber}&e=${this.currentEpisode.episode_number}`;
+          const baseUrl = "https://vidsrc.to/embed/tv/";
+          return `${baseUrl}${this.tmdbId}/${this.seasonNumber}/${this.currentEpisode.episode_number}`;
         }
       },
 
@@ -165,6 +165,7 @@
       await this.fetchSimilarSeries();
       await this.fetchTotalSeasons();
       window.addEventListener("resize", this.handleResize);
+      await this.fetchTorrents();
     },
     beforeDestroy() {
       window.removeEventListener("resize", this.handleResize);
