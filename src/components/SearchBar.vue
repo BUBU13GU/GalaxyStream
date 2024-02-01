@@ -45,48 +45,63 @@
     },
     methods: {
       fetchSuggestions() {
-        clearTimeout(this.debounceTimer);
-        this.debounceTimer = setTimeout(async () => {
-          if (!this.searchQuery.trim()) {
-            this.searchSuggestions = [];
-            this.showSuggestions = false;
-            return;
-          }
-
+        if (this.searchQuery.trim().length >= 3) {
           this.isLoading = true;
-          try {
-            const response = await axios.get(
+          axios
+            .get(
               `https://api.themoviedb.org/3/search/multi?api_key=${
                 process.env.VUE_APP_TMDB_API_KEY
               }&query=${encodeURIComponent(this.searchQuery)}`
-            );
+            )
+            .then((response) => {
+              // Assuming your logic to process response remains the same
+              const normalizedInput = this.searchQuery
+                .toLowerCase()
+                .replace(/\s+/g, "");
 
-            const normalizedInput = this.searchQuery.toLowerCase().replace(/\s+/g, "");
+              this.searchSuggestions = response.data.results
+                .filter(
+                  (item) =>
+                    item.media_type === "movie" || item.media_type === "tv"
+                )
+                .map((item) => ({
+                  name: item.title || item.name,
+                  id: item.id,
+                }))
+                .reduce((unique, item) => {
+                  const normalizedItemName = item.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "");
+                  if (
+                    !unique.some(
+                      (suggestion) =>
+                        suggestion.name.toLowerCase().replace(/\s+/g, "") ===
+                        normalizedItemName
+                    )
+                  ) {
+                    unique.push(item);
+                  }
+                  return unique;
+                }, [])
+                .filter((item) =>
+                  item.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "")
+                    .includes(normalizedInput)
+                );
 
-            this.searchSuggestions = response.data.results
-              .filter(
-                (item) => item.media_type === "movie" || item.media_type === "tv"
-              )
-              .map((item) => ({
-                name: item.title || item.name,
-                id: item.id,
-              }))
-              .reduce((unique, item) => {
-                const normalizedItemName = item.name.toLowerCase().replace(/\s+/g, "");
-                if (!unique.some(suggestion => suggestion.name.toLowerCase().replace(/\s+/g, "") === normalizedItemName)) {
-                  unique.push(item);
-                }
-                return unique;
-              }, [])
-              .filter((item) => item.name.toLowerCase().replace(/\s+/g, "").includes(normalizedInput));
-
-            this.showSuggestions = this.searchSuggestions.length > 0;
-          } catch (error) {
-            console.error("Error fetching suggestions:", error);
-          } finally {
-            this.isLoading = false;
-          }
-        }, 300);
+              this.showSuggestions = this.searchSuggestions.length > 0;
+            })
+            .catch((error) => {
+              console.error("Error fetching suggestions:", error);
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
+        } else {
+          this.searchSuggestions = [];
+          this.showSuggestions = false;
+        }
       },
       submitSearch() {
         if (this.searchQuery) {
