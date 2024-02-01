@@ -28,6 +28,7 @@
       width="100%"
       height="550px"
       frameborder="0"
+      scrolling=”no”
       overflow-y="hidden"
       allowfullscreen></iframe>
     <div v-else>Loading...</div>
@@ -130,6 +131,7 @@
         episodes: [],
         torrents: [],
         showTorrentsDropdown: false,
+        torrentsLoaded: false,
         imdbId: "",
         currentEpisode: null,
         similarSeries: [],
@@ -159,13 +161,11 @@
     },
     async created() {
       await this.fetchImdbId();
-      await this.fetchTorrents();
       await this.fetchSeriesTitle();
       await this.fetchSeasonEpisodes();
       await this.fetchSimilarSeries();
       await this.fetchTotalSeasons();
       window.addEventListener("resize", this.handleResize);
-      await this.fetchTorrents();
     },
     beforeDestroy() {
       window.removeEventListener("resize", this.handleResize);
@@ -210,9 +210,9 @@
           return;
         }
         const imdbIdWithoutTT = this.imdbId.replace("tt", "");
-        try {
-          this.torrents = []; // Reset torrents array
+        this.torrents = []; // Reset torrents array
 
+        try {
           const totalPages = 30; // Total number of pages you want to fetch
           for (let page = 1; page <= totalPages; page++) {
             const response = await axios.get(
@@ -230,6 +230,7 @@
               this.torrents = this.torrents.concat(filteredTorrents);
             }
           }
+          this.torrentsLoaded = true; // Set flag after torrents are loaded
         } catch (error) {
           console.error("Error fetching torrents:", error);
         }
@@ -271,6 +272,16 @@
       },
       toggleTorrentsDropdown() {
         this.showTorrentsDropdown = !this.showTorrentsDropdown;
+
+        // Fetch torrents only once
+        if (
+          this.showTorrentsDropdown &&
+          this.torrents.length === 0 &&
+          !this.torrentsLoaded
+        ) {
+          this.fetchTorrents();
+          this.torrentsLoaded = true; // Set the flag after torrents are loaded
+        }
       },
       async fetchTotalSeasons() {
         try {

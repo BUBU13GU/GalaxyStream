@@ -23,6 +23,7 @@
         height="550px"
         overflow-y="hidden"
         frameborder="0"
+        scrolling=”no”
         allowfullscreen></iframe>
     </div>
     <div v-else>Loading...</div>
