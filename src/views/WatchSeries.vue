@@ -418,7 +418,7 @@
   .torrents-dropdown {
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items:  flex-start;
     padding: 10px;
   }
 
