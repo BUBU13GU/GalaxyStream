@@ -147,7 +147,7 @@
         if (this.useAlternativePlayer) {
           return `https://vidsrc.to/embed/tv/${this.tmdbId}/${this.seasonNumber}`;
         } else {
-          const baseUrl = "https://vidsrc.to/embed/tv/";
+          const baseUrl = "https://vidsrc.pro/embed/tv/";
           return `${baseUrl}${this.tmdbId}/${this.seasonNumber}/${this.currentEpisode.episode_number}`;
         }
       },

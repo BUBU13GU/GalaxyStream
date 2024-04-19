@@ -167,9 +167,10 @@
         if (this.useAlternativePlayer) {
           this.videoUrl = `https://vidsrc.to/embed/movie/${this.movieId}`;
         } else {
-          this.videoUrl = `https://vidsrc.to/embed/movie/${this.movieId}`;
+          this.videoUrl = `https://vidsrc.pro/embed/movie/${this.movieId}`;
         }
         this.movieLoaded = true;
+        console.log(this.movieId)
       },
       async fetchMagnetLink(imdbId) {
   try {
