@@ -1,0 +1,31 @@
+[debug] [2024-04-19T09:59:53.918Z] ----------------------------------------------------------------------
+[debug] [2024-04-19T09:59:53.929Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\BUBU13GU\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only hosting
+[debug] [2024-04-19T09:59:53.930Z] CLI Version:   13.7.3
+[debug] [2024-04-19T09:59:53.931Z] Platform:      win32
+[debug] [2024-04-19T09:59:53.931Z] Node Version:  v20.6.0
+[debug] [2024-04-19T09:59:53.932Z] Time:          Fri Apr 19 2024 11:59:53 GMT+0200 (South Africa Standard Time)
+[debug] [2024-04-19T09:59:53.932Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-04-19T09:59:54.271Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-04-19T09:59:54.272Z] > authorizing via signed-in user (hodlwebsite@gmail.com)
+[debug] [2024-04-19T09:59:54.273Z] [iam] checking project movie-stream-13 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-04-19T09:59:54.278Z] > refreshing access token with scopes: []
+[debug] [2024-04-19T09:59:54.284Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2024-04-19T09:59:54.285Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-04-19T09:59:54.951Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2024-04-19T09:59:54.952Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-04-19T09:59:54.974Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/movie-stream-13:testIamPermissions [none]
+[debug] [2024-04-19T09:59:54.974Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/movie-stream-13:testIamPermissions x-goog-quota-user=projects/movie-stream-13
+[debug] [2024-04-19T09:59:54.975Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/movie-stream-13:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-04-19T09:59:56.973Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/movie-stream-13:testIamPermissions 200
+[debug] [2024-04-19T09:59:56.973Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/movie-stream-13:testIamPermissions {}
+[debug] [2024-04-19T09:59:56.974Z] [iam] error while checking permissions, command may fail: FirebaseError: Authorization failed. This account is missing the following required permissions on project movie-stream-13:
+
+  firebase.projects.get
+  firebasehosting.sites.update
+[debug] [2024-04-19T09:59:56.976Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/movie-stream-13 [none]
+[debug] [2024-04-19T09:59:57.589Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/movie-stream-13 403
+[debug] [2024-04-19T09:59:57.590Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/movie-stream-13 {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2024-04-19T09:59:57.592Z] HTTP Error: 403, The caller does not have permission
+[error] 
+[error] Error: Assertion failed: resolving hosting target of a site with no site name or target name. This should have caused an error earlier

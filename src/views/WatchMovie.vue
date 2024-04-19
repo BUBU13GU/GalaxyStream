@@ -199,7 +199,6 @@ constructMagnetLink(torrentHash, movieTitle) {
     'udp://torrent.gresille.org:80/announce',
     'udp://p4p.arenabg.com:1337',
     'udp://tracker.leechers-paradise.org:6969',
-    // ... more trackers ...
   ];
 
   let magnetLink = `magnet:?xt=urn:btih:${torrentHash}&dn=${encodedMovieTitle}`;
